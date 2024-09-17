@@ -4,7 +4,8 @@
   --text-color: #D3D3D3;
   --background-color: #161A1D;
   --primary-color: #660708;
-  --secondary-color: #E5383B;
+  --secondary-color: #A4161A;
+  --tertiary-color: #D3D3D3;
   
   color-scheme: light dark;
   color: var(--text-color);

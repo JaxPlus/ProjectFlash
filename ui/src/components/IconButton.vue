@@ -11,11 +11,11 @@
 
 <style scoped>
     div {
-        background-color: var(--secondary-color);
+        background-color: var(--primary-color);
         width: 4rem;
         height: 4rem;
         border-radius: 1rem;
-        margin: 2.3rem;
+        margin: 2rem;
     }
     
     button {
