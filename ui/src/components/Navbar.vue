@@ -24,7 +24,12 @@ const isMenu = ref(false);
         </div>
     </nav>
     
-    <Menu v-if="isMenu" @closeMenu="isMenu = false"/>
+    <Transition name="menuLeft">
+        <Menu v-if="isMenu" @closeMenu="isMenu = false"/>
+    </Transition>
+    <Transition name="menuBlur">
+        <div v-if="isMenu" class="menu-blur" />
+    </Transition>
 </template>
 
 <style scoped>
@@ -39,11 +44,42 @@ const isMenu = ref(false);
         border-bottom: var(--primary-color) 1px solid;
     }
     
+    .menu-blur {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(4px);
+        z-index: 1;
+    }
+    
     .btn-nav-group {
         display: flex;
     }
 
     .btn-nav-group div {
         margin-left: 0;
+    }
+
+    .menuLeft-enter-active,
+    .menuLeft-leave-active {
+        transition: left 0.3s ease;
+    }
+    
+    .menuBlur-enter-active,
+    .menuBlur-leave-active {
+        transition: opacity 0.3s ease;
+    }
+
+    .menuLeft-enter-from,
+    .menuLeft-leave-to {
+        left: -100%;
+    }
+
+    .menuBlur-enter-from,
+    .menuBlur-leave-to {
+        opacity: 0;
     }
 </style>
