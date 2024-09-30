@@ -23,4 +23,5 @@ fun Application.module() {
         allowMethod(HttpMethod.Delete)
     }
     configureRouting()
+    configureDatabases()
 }
