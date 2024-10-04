@@ -1,9 +1,11 @@
 ﻿import { createMemoryHistory, createRouter } from 'vue-router'
 
-import HelloWorld from "./components/HelloWorld.vue";
+import HelloWorld from "./pages/HelloWorld.vue";
+import RegisterPage from "./pages/RegisterPage.vue";
 
 const routes = [
     { path: '/', component: HelloWorld },
+    { path: '/login', component: RegisterPage },
 ]
 
 const router = createRouter({

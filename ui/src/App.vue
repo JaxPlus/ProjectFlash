@@ -6,11 +6,48 @@ import Navbar from "./components/Navbar.vue";
   <Navbar />
   <nav>
     <RouterLink to="/">Go to Home</RouterLink>
+    <RouterLink to="/login">Go to Login</RouterLink>
   </nav>
   <main>
     <RouterView />
   </main>
 </template>
 
-<style scoped>
+<style>
+body {
+    color: hsl(var(--text-color));
+    background-color: hsl(var(--background-color));
+    margin: 0;
+    display: flex;
+    place-items: center;
+    min-width: 320px;
+    min-height: 100vh;
+}
+
+svg {
+    width: 3em;
+    height: 3em;
+    fill: hsl(var(--background-color));
+    stroke: hsl(var(--background-color));
+}
+
+#app {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 2rem;
+    text-align: center;
+}
+
+@media (prefers-color-scheme: light) {
+    :root {
+        color: #161A1D;
+        background-color: #D3D3D3;
+    }
+    a:hover {
+        color: #747bff;
+    }
+    button {
+        background-color: #f9f9f9;
+    }
+}
 </style>
