@@ -16,7 +16,8 @@ fun Application.configureDatabases() {
             val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
             try {
                 val user = userService.read(id)
-                call.respondText(contentType = ContentType.parse("application/json"), text = user.toString())
+//                call.respondText(contentType = ContentType.parse("application/json"), text = user.toString())
+                call.respond(HttpStatusCode.OK, user)
             } catch (e: Exception) {
                 println(e)
                 call.respond(HttpStatusCode.NotFound)

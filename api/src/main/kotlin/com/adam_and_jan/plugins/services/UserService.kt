@@ -6,11 +6,7 @@ import kotlinx.serialization.Serializable
 import java.sql.Connection
 
 @Serializable
-data class User(val username: String, val email: String/*, val password: String, val money: Int, val rankingPoints: Int */) {
-    override fun toString(): String {
-        return "$username $email"
-    }
-}
+data class User(val username: String, val email: String/*, val password: String, val money: Int, val rankingPoints: Int */)
 
 class UserService(private val connection: Connection) {
     suspend fun read(id: Int): User = withContext(Dispatchers.IO) {
