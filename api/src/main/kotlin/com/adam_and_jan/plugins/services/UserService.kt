@@ -9,6 +9,19 @@ import java.sql.Connection
 data class User(val username: String, val email: String/*, val password: String, val money: Int, val rankingPoints: Int */)
 
 class UserService(private val connection: Connection) {
+
+    suspend fun getAllUsers(): List<User> = withContext(Dispatchers.IO) {
+        val statement = connection.prepareStatement("SELECT * FROM users")
+        val resultSet = statement.executeQuery()
+        val users = mutableListOf<User>()
+
+        while (resultSet.next()) {
+            users.add(User(resultSet.getString("username"), resultSet.getString("email")))
+        }
+
+        return@withContext users
+    }
+
     suspend fun read(id: Int): User = withContext(Dispatchers.IO) {
         val statement = connection.prepareStatement("SELECT users.username, users.email FROM users WHERE id = ?")
         statement.setInt(1, id)
