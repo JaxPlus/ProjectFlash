@@ -48,10 +48,10 @@
   }
  
   .dark {
-    --text-color: hsl(0, 0%, 83%, 100%);
-    --background-color: #161A1D;
-    --primary-color: #660708;
-    --secondary-color: #A4161A;
+    --text-color: 0 0% 83%;
+    --background-color: 206 24% 11%;
+    --primary-color: 359 93% 40%;
+    --secondary-color: 358 87% 64%;
     
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
@@ -81,6 +81,13 @@
     --destructive-foreground: 0 0% 98%;
  
     --ring: 0 0% 83.1%;
+  }
+  
+  .cafe {
+    --text-color: 1 61% 27%;
+    --background-color: 43 100% 83%;
+    --primary-color: 37 42% 54%;
+    --secondary-color: 25, 57%, 38%;
   }
 }
  
