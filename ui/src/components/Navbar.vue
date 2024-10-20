@@ -17,7 +17,7 @@ const changePage = (pathStr: string) => {
 </script>
 
 <template>
-    <nav class="absolute top-0 left-0 w-full z-5 flex justify-between border-b-2 border-primary-color">
+    <nav class="w-full max-h-[8.5rem] z-5 flex justify-between border-b-2 border-secondary-color">
         <IconButton @click="isMenu = true">
             <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 8h12M6 12h12M6 16h12"/></svg>
         </IconButton>
@@ -53,7 +53,7 @@ const changePage = (pathStr: string) => {
         <Menu v-if="isMenu" @closeMenu="isMenu = false"/>
     </Transition>
     <Transition name="menuBlur">
-        <div v-if="isMenu" class="fixed top-0 right-0 w-full h-full bg-[#000000B2] backdrop-blur-[2px] z-5" />
+        <div v-if="isMenu" class="fixed top-0 right-0 w-full h-full bg-[#000000B2] backdrop-blur-[2px] z-10" />
     </Transition>
 </template>
 

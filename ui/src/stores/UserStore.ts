@@ -4,7 +4,7 @@ import {useColorMode} from "@vueuse/core";
 type themes = "light" | "dark" | "cafe";
 
 export const useUserStore = defineStore('userStore', () => {
-    let mode = useColorMode({
+    const mode = useColorMode({
         disableTransition: false,
         modes: {
             light: 'light',
@@ -15,7 +15,6 @@ export const useUserStore = defineStore('userStore', () => {
     
     function switchToDark(changeTo: themes) {
         mode.value = changeTo
-        console.log(mode)
     }
     
     return {

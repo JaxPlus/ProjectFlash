@@ -14,8 +14,6 @@ body {
     color: hsl(var(--text-color));
     background-color: hsl(var(--background-color));
     margin: 0;
-    display: flex;
-    place-items: center;
     min-width: 320px;
     min-height: 100vh;
 }
@@ -25,13 +23,6 @@ svg {
     height: 3em;
     fill: hsl(var(--background-color));
     stroke: hsl(var(--background-color));
-}
-
-#app {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 2rem;
-    text-align: center;
 }
 
 @media (prefers-color-scheme: light) {

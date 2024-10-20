@@ -51,7 +51,7 @@
     --text-color: 0 0% 83%;
     --background-color: 206 24% 11%;
     --primary-color: 359 93% 40%;
-    --secondary-color: 358 87% 64%;
+    --secondary-color: 359 87% 21%;
     
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
@@ -88,6 +88,15 @@
     --background-color: 43 100% 83%;
     --primary-color: 37 42% 54%;
     --secondary-color: 25, 57%, 38%;
+  }
+
+  #app {
+    min-height: 100vh;
+    min-width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    /*padding: 2rem;*/
+    text-align: center;
   }
 }
  

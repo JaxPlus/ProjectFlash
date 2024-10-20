@@ -1,6 +1,6 @@
 ﻿import { createMemoryHistory, createRouter } from 'vue-router'
 
-import HelloWorld from "./pages/HelloWorld.vue";
+import HelloWorld from "./pages/MainPage.vue";
 import RegisterPage from "./pages/RegisterPage.vue";
 
 const routes = [

@@ -1,8 +1,10 @@
 ﻿package com.adam_and_jan.plugins
 
+import com.adam_and_jan.plugins.services.User
 import com.adam_and_jan.plugins.services.UserService
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.request.receive
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import java.sql.*
@@ -29,6 +31,18 @@ fun Application.configureDatabases() {
                 call.respond(HttpStatusCode.OK, user)
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.NotFound)
+            }
+        }
+
+        post("/users") {
+            val user = call.receive<User>()
+
+            try {
+                val id = userService.create(user)
+                call.respond(HttpStatusCode.Created, id)
+            }
+            catch (e: Exception) {
+                call.respond(HttpStatusCode.BadRequest, e.message ?: "")
             }
         }
     }
