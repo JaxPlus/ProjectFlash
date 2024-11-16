@@ -14,7 +14,7 @@ class UserService(private val connection: Connection) {
         private const val SELECT_USER_BY_ID = """SELECT username, email FROM users WHERE id = ?"""
         private const val SELECT_USER_BY_USERNAME = """SELECT username FROM users WHERE username = ?"""
         private const val SELECT_USER_BY_EMAIL = """SELECT email FROM users WHERE email = ?"""
-        private const val SELECT_ALL_USERS = """SELECT username, email FROM users"""
+        private const val SELECT_ALL_USERS = """SELECT username, email, password FROM users"""
         private const val CREATE_USER = """INSERT INTO users (username, email, password, money, ranking_points) VALUES (?, ?, ?, ?, ?)"""
     }
 
