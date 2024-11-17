@@ -14,7 +14,7 @@ class UserService(private val connection: Connection) {
         private const val SELECT_USER_BY_ID = """SELECT username, email FROM users WHERE id = ?"""
         private const val SELECT_USER_BY_USERNAME = """SELECT username FROM users WHERE username = ?"""
         private const val SELECT_USER_BY_EMAIL = """SELECT email FROM users WHERE email = ?"""
-        private const val SELECT_ALL_USERS = """SELECT username, email FROM users"""
+        private const val SELECT_ALL_USERS = """SELECT username, email, password FROM users"""
         private const val CREATE_USER = """INSERT INTO users (username, email, password, money, ranking_points) VALUES (?, ?, ?, ?, ?)"""
     }
 
@@ -22,6 +22,7 @@ class UserService(private val connection: Connection) {
         val statement = connection.prepareStatement(CREATE_USER, Statement.RETURN_GENERATED_KEYS)
         statement.setString(1, user.username)
         statement.setString(2, user.email)
+        // todo że tutaj mi chodzi o te encode czy coś
         statement.setString(3, user.password)
         statement.setInt(4, 0)
         statement.setInt(5, 0)
@@ -64,7 +65,10 @@ class UserService(private val connection: Connection) {
         val users = mutableListOf<User>()
 
         while (resultSet.next()) {
-            users.add(User(resultSet.getString("username"), resultSet.getString("email"), resultSet.getString("password")))
+            val username = resultSet.getString("username")
+            val email = resultSet.getString("email")
+            val password = resultSet.getString("password")
+            users.add(User(username, email, password))
         }
 
         return@withContext users

@@ -20,6 +20,7 @@ fun Application.configureDatabases() {
                 call.respond(HttpStatusCode.OK, users)
             }
             catch (e: Exception) {
+                println("Error: ${e.message}")
                 call.respond(HttpStatusCode.NotFound)
             }
         }
