@@ -2,12 +2,9 @@
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.Serializable
 import java.sql.Connection
 import java.sql.Statement
-
-@Serializable
-data class User(val username: String, val email: String, val password: String)
+import com.adam_and_jan.models.User
 
 class UserService(private val connection: Connection) {
     companion object {
@@ -22,7 +19,7 @@ class UserService(private val connection: Connection) {
         val statement = connection.prepareStatement(CREATE_USER, Statement.RETURN_GENERATED_KEYS)
         statement.setString(1, user.username)
         statement.setString(2, user.email)
-        statement.setString(3, user.password)
+        statement.setString(3, user.hashedPassword())
         statement.setInt(4, 0)
         statement.setInt(5, 0)
 

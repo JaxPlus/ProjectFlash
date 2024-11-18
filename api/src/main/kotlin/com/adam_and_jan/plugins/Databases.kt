@@ -1,6 +1,6 @@
 ﻿package com.adam_and_jan.plugins
 
-import com.adam_and_jan.plugins.services.User
+import com.adam_and_jan.models.User
 import com.adam_and_jan.plugins.services.UserService
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -52,7 +52,7 @@ fun Application.connectToPostgres(embedded: Boolean): Connection {
     Class.forName("org.postgresql.Driver")
     if (embedded) {
         // DriverManager.getConnection("jdbc:<host>:<port>/<baza_danych>", "nazwa użytkownika", "hasło")
-        return DriverManager.getConnection("jdbc:postgresql://localhost:5432/projectFlash", "postgres", "1234")
+        return DriverManager.getConnection("jdbc:postgresql://localhost:5432/projectFlash", "postgres", "postgres")
     } else {
         val url = environment.config.property("postgres.url").getString()
         val user = environment.config.property("postgres.user").getString()
