@@ -61,7 +61,10 @@ class UserService(private val connection: Connection) {
         val users = mutableListOf<User>()
 
         while (resultSet.next()) {
-            users.add(User(resultSet.getString("username"), resultSet.getString("email"), resultSet.getString("password")))
+            val username = resultSet.getString("username")
+            val email = resultSet.getString("email")
+            val password = resultSet.getString("password")
+            users.add(User(username, email, password))
         }
 
         return@withContext users
