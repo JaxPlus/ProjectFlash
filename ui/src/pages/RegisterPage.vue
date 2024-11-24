@@ -27,7 +27,7 @@ const formSchema = z.object({
 //   password: String,
 // });
 
-const onSubmit = (values: z.infer<typeof formSchema>) => {
+const onSubmit = async (values: z.infer<typeof formSchema>) => {
   console.log(values.username, values.email, values.password);
 
   axios.post("http://127.0.0.1:8080/users", values).then((res) => {

@@ -36,6 +36,19 @@ fun Application.configureDatabases() {
             }
         }
 
+        post("/login") {
+            val email = call.parameters["email"]?.toString() ?: throw IllegalArgumentException("Invalid email")
+            val password = call.parameters["password"]?.toString() ?: throw IllegalArgumentException("Invalid password")
+
+            try {
+                val result = userService.getLoginUser(email, password)
+                call.respond(HttpStatusCode.OK, result)
+            }
+            catch (e: Exception) {
+                call.respond(HttpStatusCode.BadRequest, e.message ?: "")
+            }
+        }
+
         post("/users") {
             val user = call.receive<User>()
 

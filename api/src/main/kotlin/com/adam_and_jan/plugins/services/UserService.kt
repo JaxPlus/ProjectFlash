@@ -5,6 +5,8 @@ import kotlinx.coroutines.withContext
 import java.sql.Connection
 import java.sql.Statement
 import com.adam_and_jan.models.User
+import org.mindrot.jbcrypt.BCrypt
+import sun.security.util.Password
 
 class UserService(private val connection: Connection) {
     companion object {
@@ -13,6 +15,7 @@ class UserService(private val connection: Connection) {
         private const val SELECT_USER_BY_EMAIL = """SELECT email FROM users WHERE email = ?"""
         private const val SELECT_ALL_USERS = """SELECT username, email, password FROM users"""
         private const val CREATE_USER = """INSERT INTO users (username, email, password, money, ranking_points) VALUES (?, ?, ?, ?, ?)"""
+        private const val SELECT_LOGIN_USER = """SELECT email, password FROM users WHERE email = ? AND password = ?"""
     }
 
     suspend fun create(user: User): Int = withContext(Dispatchers.IO) {
@@ -83,5 +86,23 @@ class UserService(private val connection: Connection) {
         } else {
             throw Exception("Record not found")
         }
+    }
+
+    suspend fun getLoginUser(email: String, password: String): Boolean {
+        val statement = connection.prepareStatement(SELECT_LOGIN_USER)
+        statement.setString(1, email)
+        statement.setString(2, hashPw(password))
+        val resultSet = statement.executeQuery()
+
+        if(resultSet.next()) {
+            return true
+        } else {
+            throw Exception("User doesn't exist")
+        }
+    }
+
+    fun hashPw(password: String): String {
+        val salt = BCrypt.gensalt()
+        return BCrypt.hashpw(password, salt)
     }
 }
