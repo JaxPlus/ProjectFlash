@@ -1,5 +1,6 @@
 ﻿package com.adam_and_jan.plugins
 
+import com.adam_and_jan.dto.UserLoginDto
 import com.adam_and_jan.models.User
 import com.adam_and_jan.plugins.services.UserService
 import io.github.cdimascio.dotenv.dotenv
@@ -37,11 +38,10 @@ fun Application.configureDatabases() {
         }
 
         post("/login") {
-            val email = call.parameters["email"]?.toString() ?: throw IllegalArgumentException("Invalid email")
-            val password = call.parameters["password"]?.toString() ?: throw IllegalArgumentException("Invalid password")
+            val user = call.receive<UserLoginDto>()
 
             try {
-                val result = userService.getLoginUser(email, password)
+                val result = userService.getLoginUser(user.email, user.password)
                 call.respond(HttpStatusCode.OK, result)
             }
             catch (e: Exception) {
