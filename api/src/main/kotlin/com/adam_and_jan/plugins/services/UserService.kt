@@ -1,16 +1,17 @@
 ﻿package com.adam_and_jan.plugins.services
 
+import com.adam_and_jan.dto.UserDto
+import com.adam_and_jan.mappers.UserMapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.sql.Connection
 import java.sql.Statement
 import com.adam_and_jan.models.User
 import org.mindrot.jbcrypt.BCrypt
-import sun.security.util.Password
 
 class UserService(private val connection: Connection) {
     companion object {
-        private const val SELECT_USER_BY_ID = """SELECT username, email FROM users WHERE id = ?"""
+        private const val SELECT_USER_BY_ID = """SELECT username, email, password FROM users WHERE id = ?"""
         private const val SELECT_USER_BY_USERNAME = """SELECT username FROM users WHERE username = ?"""
         private const val SELECT_USER_BY_EMAIL = """SELECT email FROM users WHERE email = ?"""
         private const val SELECT_ALL_USERS = """SELECT username, email, password FROM users"""
@@ -73,7 +74,7 @@ class UserService(private val connection: Connection) {
         return@withContext users
     }
 
-    suspend fun read(id: Int): User = withContext(Dispatchers.IO) {
+    suspend fun read(id: Int): UserDto = withContext(Dispatchers.IO) {
         val statement = connection.prepareStatement(SELECT_USER_BY_ID)
         statement.setInt(1, id)
         val resultSet = statement.executeQuery()
@@ -82,20 +83,20 @@ class UserService(private val connection: Connection) {
             val username = resultSet.getString("username")
             val email = resultSet.getString("email")
             val password = resultSet.getString("password")
-            return@withContext User(username, email, password)
+            return@withContext UserMapper.toDto(User(username, email, password))
         } else {
             throw Exception("Record not found")
         }
     }
 
-    suspend fun getLoginUser(email: String, password: String): Boolean {
+    suspend fun getLoginUser(email: String, password: String): Boolean = withContext(Dispatchers.IO) {
         val statement = connection.prepareStatement(SELECT_LOGIN_USER)
         statement.setString(1, email)
         statement.setString(2, hashPw(password))
         val resultSet = statement.executeQuery()
 
         if(resultSet.next()) {
-            return true
+            return@withContext true
         } else {
             throw Exception("User doesn't exist")
         }
