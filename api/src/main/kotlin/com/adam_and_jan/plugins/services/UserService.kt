@@ -17,6 +17,7 @@ class UserService(private val connection: Connection) {
         private const val SELECT_ALL_USERS = """SELECT username, email, password FROM users"""
         private const val CREATE_USER = """INSERT INTO users (username, email, password, money, ranking_points) VALUES (?, ?, ?, ?, ?)"""
         private const val SELECT_LOGIN_USER = """SELECT email, password FROM users WHERE email = ? AND password = ?"""
+        private const val IF_USER_EXISTS = """SELECT 1 FROM users WHERE email = ?"""
     }
 
     suspend fun create(user: User): Int = withContext(Dispatchers.IO) {
@@ -90,6 +91,14 @@ class UserService(private val connection: Connection) {
     }
 
     suspend fun getLoginUser(email: String, password: String): Boolean = withContext(Dispatchers.IO) {
+        val userExists = connection.prepareStatement(IF_USER_EXISTS)
+        userExists.setString(1, email)
+        val userExistsResult = userExists.executeQuery()
+
+        if (!userExistsResult.next()) {
+            throw Exception("User doesn't exist. You must create your account!")
+        }
+
         val statement = connection.prepareStatement(SELECT_LOGIN_USER)
         statement.setString(1, email)
         statement.setString(2, hashPw(password))
@@ -98,7 +107,7 @@ class UserService(private val connection: Connection) {
         if(resultSet.next()) {
             return@withContext true
         } else {
-            throw Exception("User doesn't exist")
+            throw Exception("Email or password do not match.")
         }
     }
 
