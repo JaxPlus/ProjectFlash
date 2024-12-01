@@ -1,19 +1,16 @@
 ﻿<script setup lang="ts">
 import {ref} from "vue";
-import router from "@/router";
 import { useColorMode } from "@vueuse/core";
 import IconButton from "./IconButton.vue";
 import Menu from "./Menu.vue";
 import {useUserStore} from "@/stores/UserStore.ts";
+import {changePage} from "@/utility.ts"; 
 
 const isMenu = ref(false);
 // const mode = useColorMode({ disableTransition: false })
 const userStore = useUserStore()
 const siteTheme = useColorMode()
 
-const changePage = (pathStr: string) => {
-    router.push({ path: pathStr });
-};
 </script>
 
 <template>
