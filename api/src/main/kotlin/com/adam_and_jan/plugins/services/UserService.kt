@@ -16,7 +16,7 @@ class UserService(private val connection: Connection) {
         private const val SELECT_USER_BY_EMAIL = """SELECT email FROM users WHERE email = ?"""
         private const val SELECT_ALL_USERS = """SELECT username, email, password FROM users"""
         private const val CREATE_USER = """INSERT INTO users (username, email, password, money, ranking_points) VALUES (?, ?, ?, ?, ?)"""
-        private const val SELECT_LOGIN_USER = """SELECT email, password FROM users WHERE email = ? AND password = ?"""
+        private const val SELECT_LOGIN_USER = """SELECT email, password FROM users WHERE email = ?"""
         private const val IF_USER_EXISTS = """SELECT 1 FROM users WHERE email = ?"""
     }
 
@@ -101,18 +101,15 @@ class UserService(private val connection: Connection) {
 
         val statement = connection.prepareStatement(SELECT_LOGIN_USER)
         statement.setString(1, email)
-        statement.setString(2, hashPw(password))
         val resultSet = statement.executeQuery()
 
-        if(resultSet.next()) {
+        val passFromDB = resultSet.getString("password")
+        val checkPw = BCrypt.checkpw(password, passFromDB)
+
+        if(resultSet.next() && checkPw) {
             return@withContext true
         } else {
             throw Exception("Email or password do not match.")
         }
-    }
-
-    fun hashPw(password: String): String {
-        val salt = BCrypt.gensalt()
-        return BCrypt.hashpw(password, salt)
     }
 }
