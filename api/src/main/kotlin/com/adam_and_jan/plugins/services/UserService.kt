@@ -102,11 +102,12 @@ class UserService(private val connection: Connection) {
         val statement = connection.prepareStatement(SELECT_LOGIN_USER)
         statement.setString(1, email)
         val resultSet = statement.executeQuery()
+        resultSet.next()
 
         val passFromDB = resultSet.getString("password")
         val checkPw = BCrypt.checkpw(password, passFromDB)
 
-        if(resultSet.next() && checkPw) {
+        if(checkPw) {
             return@withContext true
         } else {
             throw Exception("Email or password do not match.")
