@@ -4,7 +4,6 @@ import com.adam_and_jan.dto.UserLoginDto
 import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
-import io.ktor.http.cio.Request
 import io.ktor.server.application.Application
 import io.ktor.server.auth.jwt.JWTCredential
 import io.ktor.server.auth.jwt.JWTPrincipal
@@ -13,7 +12,7 @@ import java.util.Date
 
 class JwtService(
     private val application: Application,
-    private val userService: UserService
+    private val userService: UserService,
 ) {
 
     private val secret = getConfigProperty("jwt.secret")
@@ -43,15 +42,15 @@ class JwtService(
         } else null
     }
 
-    suspend fun customValidator(credential: JWTCredential): () -> JWTPrincipal? {
+    suspend fun customValidator(credential: JWTCredential): JWTPrincipal? {
         val email = extractEmail(credential)
         val foundUser = userService.findUserByEmail(email.toString())
 
-        return {
-            if (foundUser != null && audienceMatches(credential)) {
-                JWTPrincipal(credential.payload)
-            } else null
+        if (foundUser != null && audienceMatches(credential)) {
+            return JWTPrincipal(credential.payload)
         }
+
+        return null;
     }
 
     private fun JwtService.audienceMatches(credential: JWTCredential): Boolean =
