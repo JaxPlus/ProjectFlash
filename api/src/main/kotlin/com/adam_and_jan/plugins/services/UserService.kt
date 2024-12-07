@@ -12,12 +12,13 @@ import org.mindrot.jbcrypt.BCrypt
 class UserService(private val connection: Connection) {
     companion object {
         private const val SELECT_USER_BY_ID = """SELECT username, email, password FROM users WHERE id = ?"""
-        private const val SELECT_USER_BY_USERNAME = """SELECT username FROM users WHERE username = ?"""
-        private const val SELECT_USER_BY_EMAIL = """SELECT email FROM users WHERE email = ?"""
+        private const val CHECK_IF_USERNAME_EXISTS = """SELECT username FROM users WHERE username = ?"""
+        private const val CHECK_IF_EMAIL_EXISTS = """SELECT email FROM users WHERE email = ?"""
         private const val SELECT_ALL_USERS = """SELECT username, email, password FROM users"""
         private const val CREATE_USER = """INSERT INTO users (username, email, password, money, ranking_points) VALUES (?, ?, ?, ?, ?)"""
         private const val SELECT_LOGIN_USER = """SELECT email, password FROM users WHERE email = ?"""
         private const val IF_USER_EXISTS = """SELECT 1 FROM users WHERE email = ?"""
+
     }
 
     suspend fun create(user: User): Int = withContext(Dispatchers.IO) {
@@ -28,7 +29,7 @@ class UserService(private val connection: Connection) {
         statement.setInt(4, 0)
         statement.setInt(5, 0)
 
-        val usernameStatement = connection.prepareStatement(SELECT_USER_BY_USERNAME)
+        val usernameStatement = connection.prepareStatement(CHECK_IF_USERNAME_EXISTS)
         usernameStatement.setString(1, user.username)
         val isUsernameAvailable = usernameStatement.executeQuery()
 
@@ -36,7 +37,7 @@ class UserService(private val connection: Connection) {
             throw Exception("Username is already taken")
         }
 
-        val emailStatement = connection.prepareStatement(SELECT_USER_BY_EMAIL)
+        val emailStatement = connection.prepareStatement(CHECK_IF_EMAIL_EXISTS)
         emailStatement.setString(1, user.email)
         val isEmailAvailable = emailStatement.executeQuery()
 
@@ -53,6 +54,26 @@ class UserService(private val connection: Connection) {
         }
         else {
             throw Exception("Unable to retrieve the id of the newly created user.")
+        }
+
+    }
+
+    suspend fun findUserByEmail(email: String): UserDto = withContext(Dispatchers.IO) {
+
+        val statement = connection.prepareStatement(IF_USER_EXISTS)
+        statement.setString(1, email)
+        val resultSet = statement.executeQuery()
+
+        if (resultSet.next()) {
+            val username = resultSet.getString("username")
+            val email = resultSet.getString("email")
+            val password = resultSet.getString("password")
+
+
+            return@withContext UserMapper.toDto(User(username, email, password))
+        }
+        else {
+            throw Exception("User not found")
         }
 
     }
