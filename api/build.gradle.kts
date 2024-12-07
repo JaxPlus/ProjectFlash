@@ -3,6 +3,7 @@ val logback_version: String by project
 val postgres_version: String by project
 val h2_version: String by project
 val dotenv_version: String by project
+val ktor_version: String by project
 
 plugins {
     kotlin("jvm") version "2.0.20"
@@ -36,5 +37,11 @@ dependencies {
     testImplementation("io.ktor:ktor-server-test-host-jvm")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
     implementation("io.ktor:ktor-server-cors:$kotlin_version")
+
+    //JBCrypt
     implementation("org.mindrot:jbcrypt:0.4")
+
+    //JWT
+    implementation("io.ktor:ktor-server-auth:$ktor_version")
+    implementation("io.ktor:ktor-server-auth-jwt:$ktor_version")
 }
