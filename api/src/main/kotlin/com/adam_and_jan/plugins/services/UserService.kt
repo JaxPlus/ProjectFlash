@@ -19,6 +19,7 @@ class UserService(private val connection: Connection) {
         private const val SELECT_LOGIN_USER = """SELECT email, password FROM users WHERE email = ?"""
         private const val IF_USER_EXISTS = """SELECT 1 FROM users WHERE email = ?"""
 
+        private const val SELECT_USER_BY_EMAIL = """SELECT username, email, password FROM users WHERE email = ?"""
     }
 
     suspend fun create(user: User): Int = withContext(Dispatchers.IO) {
@@ -60,7 +61,7 @@ class UserService(private val connection: Connection) {
 
     suspend fun findUserByEmail(email: String): UserDto = withContext(Dispatchers.IO) {
 
-        val statement = connection.prepareStatement(IF_USER_EXISTS)
+        val statement = connection.prepareStatement(SELECT_USER_BY_EMAIL)
         statement.setString(1, email)
         val resultSet = statement.executeQuery()
 

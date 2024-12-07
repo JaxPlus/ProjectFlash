@@ -5,7 +5,6 @@ import com.adam_and_jan.plugins.services.JwtService
 import com.adam_and_jan.plugins.services.UserService
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMethod
-//import io.ktor.network.sockets.Connection
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
@@ -31,8 +30,9 @@ fun Application.module() {
     val userService = UserService(dbconnection)
     val jwtService = JwtService(this, userService)
 
+    configureSecurity(jwtService)
     configureRouting(jwtService)
     configureDatabases()
     configureSerialization()
-    configureSecurity(jwtService)
+
 }

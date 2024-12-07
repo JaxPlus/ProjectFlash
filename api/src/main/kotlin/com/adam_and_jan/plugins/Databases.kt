@@ -6,34 +6,43 @@ import com.adam_and_jan.plugins.services.UserService
 import io.github.cdimascio.dotenv.dotenv
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.auth.authenticate
+import io.ktor.server.auth.jwt.JWTPrincipal
+import io.ktor.server.auth.principal
 import io.ktor.server.request.receive
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import java.sql.*
 
 fun Application.configureDatabases() {
+
     val dbconnection: Connection = connectToPostgres(embedded = true)
     val userService = UserService(dbconnection)
 
     routing {
-        get("/users") {
-            try {
-                val users = userService.getAllUsers()
-                call.respond(HttpStatusCode.OK, users)
-            }
-            catch (e: Exception) {
-                println("Error: ${e.message}")
-                call.respond(HttpStatusCode.NotFound)
-            }
-        }
 
-        get("/users/{id}") {
-            val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
-            try {
-                val user = userService.read(id)
-                call.respond(HttpStatusCode.OK, user)
-            } catch (e: Exception) {
-                call.respond(HttpStatusCode.NotFound)
+        authenticate {
+            get("/users") {
+                try {
+                    val users = userService.getAllUsers()
+                    call.respond(HttpStatusCode.OK, users)
+                }
+                catch (e: Exception) {
+                    println("Error: ${e.message}")
+                    call.respond(HttpStatusCode.NotFound)
+                }
+            }
+
+            get("/users/{id}") {
+                val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
+                try {
+                    val user = userService.read(id)
+
+                    if(user.email == extractPrincipalEmail(call))
+                        call.respond(HttpStatusCode.OK, user)
+                } catch (e: Exception) {
+                    call.respond(HttpStatusCode.NotFound)
+                }
             }
         }
 
@@ -63,6 +72,13 @@ fun Application.configureDatabases() {
     }
 }
 
+fun extractPrincipalEmail(call: ApplicationCall): String? =
+    call.principal<JWTPrincipal>()
+        ?.payload
+        ?.getClaim("email")
+        ?.asString()
+
+
 fun Application.connectToPostgres(embedded: Boolean): Connection {
     Class.forName("org.postgresql.Driver")
 
@@ -70,7 +86,6 @@ fun Application.connectToPostgres(embedded: Boolean): Connection {
 
     if (embedded) {
         // DriverManager.getConnection("jdbc:<host>:<port>/<baza_danych>", "nazwa użytkownika", "hasło")
-        // te rzeczy można teraz edytować w pliku .env
         return DriverManager.getConnection(dotenv["DATABASE_URL"], dotenv["DATABASE_USERNAME"], dotenv["DATABASE_PASSWORD"])
     } else {
         val url = environment.config.property("postgres.url").getString()
