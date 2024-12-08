@@ -25,7 +25,7 @@ fun Application.configureRouting(
             }
         }
 
-        get("/") {
+        get("/api") {
             call.respondText(
                 contentType = ContentType.parse("text/html; charset=utf-8"),
                 text = "haj"

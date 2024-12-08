@@ -11,8 +11,8 @@ import io.ktor.server.netty.*
 import io.ktor.server.plugins.cors.routing.CORS
 import java.sql.Connection
 
-fun main() {
-    embeddedServer(Netty, port = 8080, host = "0.0.0.0", module = Application::module)
+fun main(args: Array<String>) {
+    embeddedServer(Netty, commandLineEnvironment(args))
         .start(wait = true)
 }
 
