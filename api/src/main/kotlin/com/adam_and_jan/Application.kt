@@ -33,7 +33,7 @@ fun Application.module() {
 
     val dbconnection: Connection = connectToPostgres(embedded = true)
     val userRepository = UserRepository(dbconnection)
-    val jwtService = JwtService(this, userRepository)
+    val jwtService = JwtService(this)
     val refreshTokenRepository = RefreshTokenRepository()
     val userService = UserService(userRepository, jwtService, refreshTokenRepository)
 
