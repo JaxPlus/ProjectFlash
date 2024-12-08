@@ -6,6 +6,8 @@ import com.adam_and_jan.routing.connectToPostgres
 import com.adam_and_jan.plugins.*
 import com.adam_and_jan.plugins.services.JwtService
 import com.adam_and_jan.plugins.services.UserService
+import com.adam_and_jan.repository.RefreshTokenRepository
+import com.adam_and_jan.repository.UserRepository
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMethod
 import io.ktor.server.application.*
@@ -30,11 +32,14 @@ fun Application.module() {
     }
 
     val dbconnection: Connection = connectToPostgres(embedded = true)
-    val userService = UserService(dbconnection)
-    val jwtService = JwtService(this, userService)
+    val userRepository = UserRepository(dbconnection)
+    val jwtService = JwtService(this, userRepository)
+    val refreshTokenRepository = RefreshTokenRepository()
+    val userService = UserService(userRepository, jwtService, refreshTokenRepository)
+
 
     configureSecurity(jwtService)
-    configureRouting(jwtService)
+    configureRouting(userService)
     configureDatabases()
     configureSerialization()
 }

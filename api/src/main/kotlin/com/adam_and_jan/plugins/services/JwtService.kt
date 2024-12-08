@@ -1,7 +1,9 @@
 package com.adam_and_jan.plugins.services
 
+import com.adam_and_jan.dto.UserDto
 import com.adam_and_jan.dto.UserLoginDto
 import com.adam_and_jan.models.User
+import com.adam_and_jan.repository.UserRepository
 import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
@@ -13,7 +15,7 @@ import java.util.Date
 
 class JwtService(
     private val application: Application,
-    private val userService: UserService,
+    private val userRepository: UserRepository,
 ) {
 
     private val secret = getConfigProperty("jwt.secret")
@@ -46,9 +48,9 @@ class JwtService(
 
     suspend fun customValidator(credential: JWTCredential): JWTPrincipal? {
         val email = extractEmail(credential)
-        val foundUser = userService.findUserByEmail(email.toString())
+        //val foundUser = userRepository.findUserByEmail(email.toString())
 
-        if (foundUser == User && audienceMatches(credential)) {
+        if (audienceMatches(credential)) {
             return JWTPrincipal(credential.payload)
         }
 

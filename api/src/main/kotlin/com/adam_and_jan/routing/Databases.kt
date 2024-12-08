@@ -3,6 +3,7 @@
 import com.adam_and_jan.dto.UserLoginDto
 import com.adam_and_jan.models.User
 import com.adam_and_jan.plugins.services.UserService
+import com.adam_and_jan.repository.UserRepository
 import io.github.cdimascio.dotenv.dotenv
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -17,14 +18,14 @@ import java.sql.*
 fun Application.configureDatabases() {
 
     val dbconnection: Connection = connectToPostgres(embedded = true)
-    val userService = UserService(dbconnection)
+    val userRepository = UserRepository(dbconnection)
 
     routing {
 
         authenticate {
             get("/users") {
                 try {
-                    val users = userService.getAllUsers()
+                    val users = userRepository.getAllUsers()
                     call.respond(HttpStatusCode.OK, users)
                 }
                 catch (e: Exception) {
@@ -36,7 +37,7 @@ fun Application.configureDatabases() {
             get("/users/{id}") {
                 val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
                 try {
-                    val user = userService.read(id)
+                    val user = userRepository.read(id)
 
                     if(user.email == extractPrincipalEmail(call))
                         call.respond(HttpStatusCode.OK, user)
@@ -50,7 +51,7 @@ fun Application.configureDatabases() {
             val user = call.receive<UserLoginDto>()
 
             try {
-                val result = userService.getLoginUser(user.email, user.password)
+                val result = userRepository.getLoginUser(user.email, user.password)
                 call.respond(HttpStatusCode.OK, result)
             }
             catch (e: Exception) {
@@ -62,7 +63,7 @@ fun Application.configureDatabases() {
             val user = call.receive<User>()
 
             try {
-                val id = userService.create(user)
+                val id = userRepository.create(user)
                 call.respond(HttpStatusCode.Created, id)
             }
             catch (e: Exception) {
