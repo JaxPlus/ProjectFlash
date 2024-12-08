@@ -34,5 +34,4 @@ fun Application.module() {
     configureRouting(jwtService)
     configureDatabases()
     configureSerialization()
-
 }
