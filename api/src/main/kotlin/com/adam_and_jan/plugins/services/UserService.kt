@@ -1,15 +1,22 @@
 ﻿package com.adam_and_jan.plugins.services
 
 import com.adam_and_jan.dto.UserDto
+import com.adam_and_jan.dto.UserLoginDto
 import com.adam_and_jan.mappers.UserMapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.sql.Connection
 import java.sql.Statement
 import com.adam_and_jan.models.User
+import com.adam_and_jan.repository.RefreshTokenRepository
+import com.adam_and_jan.routing.response.AuthResponse
 import org.mindrot.jbcrypt.BCrypt
 
-class UserService(private val connection: Connection) {
+class UserService(
+    private val connection: Connection,
+    private val jwtService: JwtService,
+    private val refreshTokenRepository: RefreshTokenRepository
+) {
     companion object {
         private const val SELECT_USER_BY_ID = """SELECT username, email, password FROM users WHERE id = ?"""
         private const val CHECK_IF_USERNAME_EXISTS = """SELECT username FROM users WHERE username = ?"""
@@ -134,5 +141,26 @@ class UserService(private val connection: Connection) {
         } else {
             throw Exception("Email or password do not match.")
         }
+    }
+
+    suspend fun authenticate(dto: UserLoginDto): AuthResponse? {
+        val email = dto.email
+
+        return if(getLoginUser(email, dto.password)) {
+            val accessToken = jwtService.createAccessToken(email)
+            val refreshToken = jwtService.createRefreshToken(email)
+
+            refreshTokenRepository.save(refreshToken, email)
+
+            AuthResponse(
+                accessToken = accessToken,
+                refreshToken = refreshToken
+            )
+        }
+        else null
+    }
+
+    fun refreshToken(string: String): String? {
+
     }
 }

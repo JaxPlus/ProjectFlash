@@ -3,7 +3,9 @@ package com.adam_and_jan.routing
 import com.adam_and_jan.dto.UserLoginDto
 import com.adam_and_jan.plugins.services.JwtService
 import com.adam_and_jan.plugins.services.UserService
+import com.adam_and_jan.routing.request.RefreshTokenRequest
 import com.adam_and_jan.routing.response.AuthResponse
+import com.adam_and_jan.routing.response.RefreshTokenResponse
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.*
@@ -27,7 +29,17 @@ fun Application.configureRouting(
             }
 
             post("/refresh") {
+                val request = call.receive<RefreshTokenRequest>()
 
+                val newAccessToken: String? = userService.refreshToken(request.token)
+
+                newAccessToken?.let {
+                    call.respond(
+                        RefreshTokenResponse(it)
+                    )
+                } ?: call.respond(
+                    message = HttpStatusCode.Unauthorized
+                )
             }
         }
 

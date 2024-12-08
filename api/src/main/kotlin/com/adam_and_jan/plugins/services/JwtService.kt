@@ -52,7 +52,7 @@ class JwtService(
             return JWTPrincipal(credential.payload)
         }
 
-        return null;
+        return null
     }
 
     fun audienceMatches(audience: String): Boolean =
