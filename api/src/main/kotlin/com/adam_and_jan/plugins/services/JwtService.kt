@@ -1,6 +1,7 @@
 package com.adam_and_jan.plugins.services
 
 import com.adam_and_jan.dto.UserLoginDto
+import com.adam_and_jan.models.User
 import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
@@ -28,30 +29,34 @@ class JwtService(
             .withIssuer(issuer)
             .build()
 
-    suspend fun createJwtToken(userLoginDto: UserLoginDto): String? {
-        val foundUser = userService.getLoginUser(userLoginDto.email, userLoginDto.password)
+    fun createAccessToken(email: String): String =
+        createJwtToken(email, 3_600_000)
 
-        return if (foundUser != false) {
-            JWT
-                .create()
-                .withAudience(audience)
-                .withIssuer(issuer)
-                .withClaim("email", userLoginDto.email)
-                .withExpiresAt(Date(System.currentTimeMillis() + 3_600_000))
-                .sign(Algorithm.HMAC256(secret))
-        } else null
-    }
+    fun createRefreshToken(email: String): String =
+        createJwtToken(email, 86_400_000)
+
+    private fun createJwtToken(email: String, expireIn: Int): String =
+        JWT
+            .create()
+            .withAudience(audience)
+            .withIssuer(issuer)
+            .withClaim("email", email)
+            .withExpiresAt(Date(System.currentTimeMillis() + expireIn))
+            .sign(Algorithm.HMAC256(secret))
 
     suspend fun customValidator(credential: JWTCredential): JWTPrincipal? {
         val email = extractEmail(credential)
         val foundUser = userService.findUserByEmail(email.toString())
 
-        if (foundUser != null && audienceMatches(credential)) {
+        if (foundUser == User && audienceMatches(credential)) {
             return JWTPrincipal(credential.payload)
         }
 
         return null;
     }
+
+    fun audienceMatches(audience: String): Boolean =
+        this.audience == audience
 
     private fun JwtService.audienceMatches(credential: JWTCredential): Boolean =
         credential.payload.audience.contains(audience)

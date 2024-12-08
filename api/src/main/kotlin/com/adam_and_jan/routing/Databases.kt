@@ -1,4 +1,4 @@
-﻿package com.adam_and_jan.plugins
+﻿package com.adam_and_jan.routing
 
 import com.adam_and_jan.dto.UserLoginDto
 import com.adam_and_jan.models.User

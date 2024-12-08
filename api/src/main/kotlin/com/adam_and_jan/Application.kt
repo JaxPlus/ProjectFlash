@@ -1,5 +1,8 @@
 package com.adam_and_jan
 
+import com.adam_and_jan.routing.configureDatabases
+import com.adam_and_jan.routing.configureRouting
+import com.adam_and_jan.routing.connectToPostgres
 import com.adam_and_jan.plugins.*
 import com.adam_and_jan.plugins.services.JwtService
 import com.adam_and_jan.plugins.services.UserService
