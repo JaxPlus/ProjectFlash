@@ -2,17 +2,11 @@
 
 import com.adam_and_jan.dto.UserDto
 import com.adam_and_jan.dto.UserLoginDto
-import com.adam_and_jan.mappers.UserMapper
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import java.sql.Connection
-import java.sql.Statement
 import com.adam_and_jan.models.User
 import com.adam_and_jan.repository.RefreshTokenRepository
 import com.adam_and_jan.repository.UserRepository
 import com.adam_and_jan.routing.response.AuthResponse
 import com.auth0.jwt.interfaces.DecodedJWT
-import org.mindrot.jbcrypt.BCrypt
 
 class UserService(
     private val userRepository: UserRepository,

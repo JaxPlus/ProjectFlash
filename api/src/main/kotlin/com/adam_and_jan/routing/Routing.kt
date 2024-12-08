@@ -1,7 +1,6 @@
 package com.adam_and_jan.routing
 
 import com.adam_and_jan.dto.UserLoginDto
-import com.adam_and_jan.plugins.services.JwtService
 import com.adam_and_jan.plugins.services.UserService
 import com.adam_and_jan.routing.request.RefreshTokenRequest
 import com.adam_and_jan.routing.response.AuthResponse

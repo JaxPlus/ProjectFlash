@@ -2,7 +2,6 @@
 
 import com.adam_and_jan.dto.UserLoginDto
 import com.adam_and_jan.models.User
-import com.adam_and_jan.plugins.services.UserService
 import com.adam_and_jan.repository.UserRepository
 import io.github.cdimascio.dotenv.dotenv
 import io.ktor.http.*
@@ -42,7 +41,7 @@ fun Application.configureDatabases() {
                     if(user.email == extractPrincipalEmail(call))
                         call.respond(HttpStatusCode.OK, user)
                 } catch (e: Exception) {
-                    call.respond(HttpStatusCode.NotFound)
+                    call.respond(HttpStatusCode.NotFound, e.message ?: "")
                 }
             }
         }

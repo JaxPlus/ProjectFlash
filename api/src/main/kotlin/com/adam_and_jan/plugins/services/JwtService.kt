@@ -1,8 +1,5 @@
 package com.adam_and_jan.plugins.services
 
-import com.adam_and_jan.dto.UserDto
-import com.adam_and_jan.dto.UserLoginDto
-import com.adam_and_jan.models.User
 import com.adam_and_jan.repository.UserRepository
 import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
@@ -15,7 +12,7 @@ import java.util.Date
 
 class JwtService(
     private val application: Application,
-    private val userRepository: UserRepository,
+    //private val userRepository: UserRepository,
 ) {
 
     private val secret = getConfigProperty("jwt.secret")
@@ -46,8 +43,8 @@ class JwtService(
             .withExpiresAt(Date(System.currentTimeMillis() + expireIn))
             .sign(Algorithm.HMAC256(secret))
 
-    suspend fun customValidator(credential: JWTCredential): JWTPrincipal? {
-        val email = extractEmail(credential)
+    fun customValidator(credential: JWTCredential): JWTPrincipal? {
+        //val email = extractEmail(credential)
         //val foundUser = userRepository.findUserByEmail(email.toString())
 
         if (audienceMatches(credential)) {
