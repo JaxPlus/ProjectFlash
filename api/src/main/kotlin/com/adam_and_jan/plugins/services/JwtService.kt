@@ -4,7 +4,6 @@ import com.adam_and_jan.dto.UserLoginDto
 import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
-import io.github.cdimascio.dotenv.dotenv
 import io.ktor.server.application.Application
 import io.ktor.server.auth.jwt.JWTCredential
 import io.ktor.server.auth.jwt.JWTPrincipal
@@ -15,13 +14,12 @@ class JwtService(
     private val application: Application,
     private val userService: UserService,
 ) {
-    val dotenv = dotenv()
 
-    private val secret = dotenv["JWT_SECRET"]//getConfigProperty("jwt.secret")
-    private val issuer = dotenv["JWT_ISSUER"]//getConfigProperty("jwt.issuer")
-    private val audience = dotenv["JWT_AUDIENCE"]//getConfigProperty("jwt.audience")
+    private val secret = getConfigProperty("jwt.secret")
+    private val issuer = getConfigProperty("jwt.issuer")
+    private val audience = getConfigProperty("jwt.audience")
 
-    val realm = dotenv["JWT_REALM"]//getConfigProperty("jwt.realm")
+    val realm = getConfigProperty("jwt.realm")
 
     val jwtVerifier: JWTVerifier =
         JWT
@@ -61,6 +59,6 @@ class JwtService(
     private fun extractEmail(credential: JWTCredential): String? =
         credential.payload.getClaim("email").asString()
 
-//    private fun getConfigProperty(path: String) =
-//        application.environment.config.property(path).getString()
+    private fun getConfigProperty(path: String) =
+        application.environment.config.property(path).getString()
 }
