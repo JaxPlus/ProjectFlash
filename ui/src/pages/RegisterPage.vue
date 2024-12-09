@@ -1,14 +1,36 @@
 ﻿<script setup lang="ts">
 import {z} from "zod";
-import {AutoForm} from "@/components/ui/auto-form";
-import {Button} from "@/components/ui/button";
-import axios from "axios";
+import SignInUpForm from "@/components/SignInUpForm.vue";
+import {changePage} from "@/utility.ts";
+import {useFormStore} from "@/stores/FormStore.ts";
 
-const formSchema = z.object({
+const formStore = useFormStore()
+
+formStore.formType = "signUp"
+formStore.formSchema = z.object({
     username: z.string().describe("Username"),
     email: z.string().describe("Email"),
     password: z.string().describe("Password"),
 })
+formStore.formConfig = {
+    username: {
+        inputProps: {
+            placeholder: 'Enter your username',
+        }
+    },
+    email: {
+        inputProps: {
+            placeholder: 'Enter your email',
+            type: 'email',
+        }
+    },
+    password: {
+        inputProps: {
+            placeholder: 'Enter your password',
+            type: 'password',
+        }
+    },
+}
 
 // axios.get("http://localhost:8080/users").then((res) => {
 //   console.log(res.data)
@@ -27,46 +49,19 @@ const formSchema = z.object({
 //   password: String,
 // });
 
-const onSubmit = async (values: z.infer<typeof formSchema>) => {
-  console.log(values.username, values.email, values.password);
-
-  axios.post("http://127.0.0.1:8080/users", values).then((res) => {
-    console.log(res);
-  }).catch((err) => {
-    console.log(err);
-  })
+function goToLogin() {
+    formStore.clearForm()
+    changePage('/login')
 }
-
 
 </script>
 
 <template>
     <div class="w-full h-[calc(100vh-8.5rem)] flex items-center justify-center">
         <div class="w-1/3 bg-secondary-color p-10 rounded-2xl">
-            <h2>Sign up</h2>
-            <AutoForm :schema="formSchema"
-                      :field-config="{
-            username: {
-                inputProps: {
-                    placeholder: 'Enter your username',
-                }
-            },
-            email: {
-                inputProps: {
-                    placeholder: 'Enter your email',
-                }
-            },
-            password: {
-                inputProps: {
-                    placeholder: 'Enter your password',
-                    type: 'password',
-                }
-            },
-        }"
-            @submit="onSubmit"
-            >
-                <Button class="mt-4" variant="outline" type="submit">Create your account</Button>
-            </AutoForm>
+            <h2 class="text-2xl mb-5 font-bold">Sign up</h2>
+            <SignInUpForm />
+            <p class="mt-5">Already have an account? <a class="text-blue-600 cursor-pointer" @click="goToLogin()">Sign in here</a>!</p>
         </div>
     </div>
 </template>
