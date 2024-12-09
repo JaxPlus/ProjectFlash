@@ -25,6 +25,7 @@ fun Application.module() {
     install(CORS) {
         allowHost("localhost:5173")
         allowHeader(HttpHeaders.ContentType)
+        allowHeader(HttpHeaders.Authorization)
         allowMethod(HttpMethod.Options)
         allowMethod(HttpMethod.Patch)
         allowMethod(HttpMethod.Put)

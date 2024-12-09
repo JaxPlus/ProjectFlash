@@ -44,6 +44,16 @@ fun Application.configureDatabases() {
                     call.respond(HttpStatusCode.NotFound, e.message ?: "")
                 }
             }
+
+            get("/user") {
+                try {
+                    val email = extractPrincipalEmail(call) ?: throw IllegalArgumentException("Invalid Email")
+                    val user = userRepository.findUserByEmail(email)
+                    call.respond(HttpStatusCode.OK, user)
+                } catch (e: Exception) {
+                    call.respond(HttpStatusCode.NotFound, e.message ?: "")
+                }
+            }
         }
 
         post("/login") {

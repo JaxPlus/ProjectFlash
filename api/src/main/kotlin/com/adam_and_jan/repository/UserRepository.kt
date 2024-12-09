@@ -62,7 +62,6 @@ class UserRepository(
     }
 
     suspend fun findUserByEmail(email: String): UserDto = withContext(Dispatchers.IO) {
-
         val statement = connection.prepareStatement(SELECT_USER_BY_EMAIL)
         statement.setString(1, email)
         val resultSet = statement.executeQuery()
@@ -71,7 +70,6 @@ class UserRepository(
             val username = resultSet.getString("username")
             val email = resultSet.getString("email")
             val password = resultSet.getString("password")
-
 
             return@withContext UserMapper.toDto(User(username, email, password))
         } else {
