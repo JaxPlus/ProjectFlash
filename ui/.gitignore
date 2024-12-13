@@ -12,6 +12,7 @@ dist
 dist-ssr
 *.local
 .env
+public/gameTest
 
 # Editor directories and files
 .vscode/*

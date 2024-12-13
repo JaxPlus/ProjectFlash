@@ -1,12 +1,24 @@
 <script setup lang="ts">
 import Navbar from "./components/Navbar.vue";
+// import {useRuffleStore} from "@/stores/RuffleStore.ts";
+
+// const ruffleStore = useRuffleStore();
+// const player = ruffleStore.getRufflePlayer();
+//
+// window.addEventListener("DOMContentLoaded", () => {
+//     let container = document.getElementById("container");
+//     container.appendChild(player);
+//     player.load("public/gameTest/BindingOfIsaac.swf");
+// })
+
 </script>
 
 <template>
-  <Navbar />
-  <main>
-    <RouterView />
-  </main>
+    <Navbar/>
+    <main>
+<!--        <div id="container"></div>-->
+        <RouterView/>
+    </main>
 </template>
 
 <style>
@@ -30,9 +42,11 @@ svg {
         color: #161A1D;
         background-color: #D3D3D3;
     }
+
     a:hover {
         color: #747bff;
     }
+
     button {
         background-color: #f9f9f9;
     }
