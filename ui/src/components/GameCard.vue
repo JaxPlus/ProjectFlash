@@ -7,7 +7,7 @@ const props = defineProps<{
 }>()
 
 function goToGame() {
-  changePage('/games')
+  changePage('/game')
 }
 
 </script>
