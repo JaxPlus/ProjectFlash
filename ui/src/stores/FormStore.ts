@@ -23,7 +23,7 @@ export const useFormStore = defineStore('formStore', () => {
     async function userSignAction(values: z.infer<typeof props.formSchema>) {
         axios.post(url.value, values).then((res) => {
             response.value.error = ""
-            console.log(res)
+            // console.log(res)
             
             switch (url.value) {
                 case "http://127.0.0.1:8080/users":
@@ -32,14 +32,14 @@ export const useFormStore = defineStore('formStore', () => {
                     break;
                 case "http://127.0.0.1:8080/api/auth":
                     const temp = res.data as Token
-                    $cookies.set("access-token", temp.accessToken, "1h", null, null, true)
-                    $cookies.set("refresh-token", temp.refreshToken, "1d", null, null, true)
+                    $cookies.set("access-token", temp.accessToken, import.meta.env.VITE_JWT_ACCESS_TOKEN_EXP, null, null, true)
+                    $cookies.set("refresh-token", temp.refreshToken, import.meta.env.VITE_JWT_REFRESH_TOKEN_EXP, null, null, true)
                     changePage('/profile');
                     break;
             }            
         }).catch((err) => {
             response.value.error = err.response.data
-            console.log(err);
+            // console.log(err);
         })
     }
     
