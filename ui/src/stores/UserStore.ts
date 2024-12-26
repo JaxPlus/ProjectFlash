@@ -8,7 +8,7 @@ import {changePage} from "@/utility.ts";
 type themes = "light" | "dark" | "cafe";
 
 export const useUserStore = defineStore('userStore', () => {
-    const user = ref<User>()
+    const user = ref<User | null>(null)
     
     async function getUser() {
         await axios.get('http://localhost:8080/user', {
@@ -20,7 +20,7 @@ export const useUserStore = defineStore('userStore', () => {
             user.value = res.data
         }).catch(async (err) => {
             // console.log(err)
-            
+
             if ($cookies.isKey("refresh-token")) {
                 await refreshToken()
                 await getUser()
@@ -42,6 +42,32 @@ export const useUserStore = defineStore('userStore', () => {
         })
     }
     
+    async function editUsername(username: string) {
+        await axios.patch('http://localhost:8080/user/username', {
+            editUsername: username
+        }, {
+            headers: {
+                Authorization: `Bearer ${$cookies.get("access-token")}`
+            }
+        }).then((res) => {
+            if (res.data) {
+                user.value = {
+                    username: username,
+                    email: user.value?.email
+                }
+            }
+        }).catch(async (err) => {
+            if ($cookies.isKey("refresh-token")) {
+                await refreshToken()
+                await editUsername(username)
+            }
+            else {
+                user.value = null;
+                changePage('/login');
+            }
+        })
+    }
+    
     const mode = useColorMode({
         disableTransition: false,
         modes: {
@@ -59,6 +85,7 @@ export const useUserStore = defineStore('userStore', () => {
         user, 
         getUser,
         refreshToken,
+        editUsername,
         mode,
         switchToDark,
     }

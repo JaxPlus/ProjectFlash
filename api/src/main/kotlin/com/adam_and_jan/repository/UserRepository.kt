@@ -21,6 +21,7 @@ class UserRepository(
         private const val CREATE_USER = """INSERT INTO users (username, email, password, money, ranking_points) VALUES (?, ?, ?, ?, ?)"""
         private const val SELECT_LOGIN_USER = """SELECT email, password FROM users WHERE email = ?"""
         private const val IF_USER_EXISTS = """SELECT 1 FROM users WHERE email = ?"""
+        private const val SET_USER_USERNAME = """UPDATE users SET username = ? WHERE email = ?"""
 
         private const val SELECT_USER_BY_EMAIL = """SELECT username, email, password FROM users WHERE email = ?"""
     }
@@ -112,13 +113,7 @@ class UserRepository(
     }
 
     suspend fun getLoginUser(email: String, password: String): Boolean = withContext(Dispatchers.IO) {
-        val userExists = connection.prepareStatement(IF_USER_EXISTS)
-        userExists.setString(1, email)
-        val userExistsResult = userExists.executeQuery()
-
-        if (!userExistsResult.next()) {
-            throw Exception("User doesn't exist. You must create your account!")
-        }
+        checkUser(email)
 
         val statement = connection.prepareStatement(SELECT_LOGIN_USER)
         statement.setString(1, email)
@@ -132,6 +127,33 @@ class UserRepository(
             return@withContext true
         } else {
             throw Exception("Email or password do not match.")
+        }
+    }
+
+    suspend fun setUsername(username: String, email: String): Boolean = withContext(Dispatchers.IO) {
+        checkUser(email)
+
+        val statement = connection.prepareStatement(SET_USER_USERNAME)
+        statement.setString(1, username)
+        statement.setString(2, email)
+
+        val res = statement.executeUpdate()
+
+        if (res == 1) {
+            return@withContext true
+        }
+        else {
+            throw Exception("Unable to set the username for $username")
+        }
+    }
+
+    private fun checkUser(email: String) {
+        val userExists = connection.prepareStatement(IF_USER_EXISTS)
+        userExists.setString(1, email)
+        val userExistsResult = userExists.executeQuery()
+
+        if (!userExistsResult.next()) {
+            throw Exception("User doesn't exist. You must create your account!")
         }
     }
 }
