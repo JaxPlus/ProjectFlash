@@ -38,7 +38,3 @@ userStore.getUser()
         </div>
     </div>
 </template>
-
-<style scoped>
-
-</style>
