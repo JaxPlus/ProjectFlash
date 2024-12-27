@@ -3,6 +3,7 @@
 import com.adam_and_jan.dto.UserLoginDto
 import com.adam_and_jan.models.User
 import com.adam_and_jan.repository.UserRepository
+import com.adam_and_jan.routing.request.UsernameRequest
 import io.github.cdimascio.dotenv.dotenv
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -20,7 +21,6 @@ fun Application.configureDatabases() {
     val userRepository = UserRepository(dbconnection)
 
     routing {
-
         authenticate {
             get("/users") {
                 try {
@@ -50,6 +50,19 @@ fun Application.configureDatabases() {
                     val email = extractPrincipalEmail(call) ?: throw IllegalArgumentException("Invalid Email")
                     val user = userRepository.findUserByEmail(email)
                     call.respond(HttpStatusCode.OK, user)
+                } catch (e: Exception) {
+                    call.respond(HttpStatusCode.NotFound, e.message ?: "")
+                }
+            }
+
+            patch("/user/username") {
+                try {
+                    val email = extractPrincipalEmail(call) ?: throw IllegalArgumentException("Invalid Email")
+                    val usernameRequest = call.receive<UsernameRequest>()
+                    val res = userRepository.setUsername(usernameRequest.editUsername, email)
+                    println("RESPONSE: $res")
+
+                    call.respond(HttpStatusCode.OK, res)
                 } catch (e: Exception) {
                     call.respond(HttpStatusCode.NotFound, e.message ?: "")
                 }

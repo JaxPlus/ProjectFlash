@@ -24,7 +24,3 @@ const onSubmit = async (values: z.infer<typeof formStore.formSchema>) => {
         <Button class="mt-4" variant="outline" type="submit">{{ formStore.formType === "signIn" ? "Sign in" : "Create account" }}</Button>
     </AutoForm>
 </template>
-
-<style scoped>
-
-</style>
