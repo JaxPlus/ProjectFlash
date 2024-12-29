@@ -24,9 +24,6 @@ module.exports = {
     extend: {
       colors: {
         "text-color": "hsl(var(--text-color))",
-        "background-color": "hsl(var(--background-color))",
-        "primary-color": "hsl(var(--primary-color))",
-        "secondary-color": "hsl(var(--secondary-color))",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -91,6 +88,9 @@ module.exports = {
         "collapsible-down": "collapsible-down 0.2s ease-in-out",
         "collapsible-up": "collapsible-up 0.2s ease-in-out",
       },
+      gridTemplateColumns: {
+        "shop-category": "auto 85%",
+      }
     },
   },
   plugins: [animate],

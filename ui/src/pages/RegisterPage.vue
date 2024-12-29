@@ -58,7 +58,7 @@ function goToLogin() {
 
 <template>
     <div class="w-full h-[calc(100vh-8.5rem)] flex items-center justify-center">
-        <div class="w-1/3 bg-secondary-color p-10 rounded-2xl">
+        <div class="w-1/3 bg-secondary border border-primary p-10 rounded-2xl">
             <h2 class="text-2xl mb-5 font-bold">Sign up</h2>
             <SignInUpForm />
             <p class="mt-5">Already have an account? <a class="text-blue-600 cursor-pointer" @click="goToLogin()">Sign in here</a>!</p>
