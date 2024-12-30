@@ -4,8 +4,6 @@
  
 @layer base {
   :root {
-    font-family: 'Yu Gothic', sans-serif;
-    
     /* mocny szary */
     --text-color: 240 2% 23%;
     
@@ -105,8 +103,75 @@
 
     --radius: 0.5rem;
   }
+  
+  .unicorn {
+    --text-color: 327 27% 49%;
+    
+    --background: 0 0% 98%;
+    --foreground: 330 8% 5%;
+
+    --card: 0 8% 97%;
+    --card-foreground: 330 8% 5%;
+
+    --popover: 0 8% 97%;
+    --popover-foreground: 330 8% 5%;
+
+    --primary: 307 100% 92%;
+    --primary-foreground: 0 0% 2%;
+
+    --secondary: 300, 46%, 78%;
+    --secondary-foreground: 330 8% 5%;
+
+    --muted: 300 6% 93%;
+    --muted-foreground: 309 6% 45%;
+
+    --accent: 300 6% 93%;
+    --accent-foreground: 330 8% 5%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 300 6% 90%;
+    --input: 310 7% 82%;
+    --ring: 308 24% 74%;
+
+    --radius: 0.5rem;
+  }
+  
+  .eva {
+    --text-color: 85 65% 60%;
+    
+    --background: 300 3% 6%;
+    --foreground: 0 0% 98%;
+
+    --card: 300 6% 7%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 300 6% 7%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 278 45% 60%;
+    --primary-foreground: 0 0% 98%;
+    
+    --secondary: 3 55% 45%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 280 5% 22%;
+    --muted-foreground: 280 5% 49%;
+
+    --accent: 278 45% 14%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 280 5% 12%;
+    --input: 285 4% 18%;
+    --ring: 278 45% 40%;
+  }
 
   #app {
+    font-family: 'Yu Gothic', sans-serif;
     min-height: 100vh;
     min-width: 100%;
     max-width: 1280px;

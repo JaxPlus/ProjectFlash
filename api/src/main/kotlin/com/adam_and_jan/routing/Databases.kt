@@ -2,6 +2,7 @@
 
 import com.adam_and_jan.dto.UserLoginDto
 import com.adam_and_jan.models.User
+import com.adam_and_jan.repository.ShopRepository
 import com.adam_and_jan.repository.UserRepository
 import com.adam_and_jan.routing.request.UsernameRequest
 import io.github.cdimascio.dotenv.dotenv
@@ -19,6 +20,7 @@ fun Application.configureDatabases() {
 
     val dbconnection: Connection = connectToPostgres(embedded = true)
     val userRepository = UserRepository(dbconnection)
+    val shopRepository = ShopRepository(dbconnection)
 
     routing {
         authenticate {
@@ -90,6 +92,16 @@ fun Application.configureDatabases() {
             }
             catch (e: Exception) {
                 call.respond(HttpStatusCode.BadRequest, e.message ?: "")
+            }
+        }
+
+        get("/shop") {
+            try {
+                val items = shopRepository.getAllShopItems()
+                call.respond(HttpStatusCode.OK, items)
+            }
+            catch (e: Exception) {
+                call.respond(HttpStatusCode.BadRequest, e.message ?: "Unable to get shop items")
             }
         }
     }

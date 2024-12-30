@@ -36,13 +36,13 @@ function handleSignIn() {
 
         <div class="btn-nav-group z-1 flex">
             <div>
-                <IconButton v-if="siteTheme === 'light'" @click="userStore.switchToDark('dark')">
+                <IconButton v-if="siteTheme === 'light'" @click="userStore.switchTheme('dark')">
                     <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path d="M12.058 20q-3.334 0-5.667-2.333T4.058 12q0-3.039 1.98-5.27t4.904-2.634q.081 0 .159.006t.153.017q-.506.706-.801 1.57T10.158 7.5q0 2.667 1.866 4.533t4.534 1.867q.951 0 1.813-.295t1.548-.801q.012.075.017.153t.006.159q-.384 2.923-2.615 4.903T12.057 20m0-1q2.2 0 3.95-1.213t2.55-3.162q-.5.125-1 .2t-1 .075q-3.074 0-5.237-2.162T9.158 7.5q0-.5.075-1t.2-1q-1.95.8-3.163 2.55T5.058 12q0 2.9 2.05 4.95t4.95 2.05m-.25-6.75"/></svg>
                 </IconButton>
-                <IconButton v-if="siteTheme === 'dark'" @click="userStore.switchToDark('cafe')">
+                <IconButton v-if="siteTheme === 'dark'" @click="userStore.switchTheme('cafe')">
                     <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32"><path d="M2 28h28v2H2zm22.5-17H8a2 2 0 0 0-2 2v8a5.006 5.006 0 0 0 5 5h8a5.006 5.006 0 0 0 5-5v-1h.5a4.5 4.5 0 0 0 0-9M22 21a3.003 3.003 0 0 1-3 3h-8a3.003 3.003 0 0 1-3-3v-8h14zm2.5-3H24v-5h.5a2.5 2.5 0 0 1 0 5M19 9h-2v-.146a1.99 1.99 0 0 0-1.105-1.789L13.21 5.724A3.98 3.98 0 0 1 11 2.146V1h2v1.146a1.99 1.99 0 0 0 1.106 1.789l2.683 1.341A3.98 3.98 0 0 1 19 8.854z"/></svg>
                 </IconButton>
-                <IconButton v-if="siteTheme === 'cafe'" @click="userStore.switchToDark('light')">
+                <IconButton v-if="siteTheme === 'cafe'" @click="userStore.switchTheme('light')">
                     <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" stroke-width="2"><circle cx="12" cy="12" r="4" stroke-linejoin="round"/><path stroke-linecap="round" d="M20 12h1M3 12h1m8 8v1m0-18v1m5.657 13.657l.707.707M5.636 5.636l.707.707m0 11.314l-.707.707M18.364 5.636l-.707.707"/></g></svg>
                 </IconButton>
             </div>

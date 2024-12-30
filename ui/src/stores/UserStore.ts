@@ -5,7 +5,7 @@ import User from "@/models/User.ts";
 import axios from "axios";
 import {changePage} from "@/utility.ts";
 
-type themes = "light" | "dark" | "cafe";
+type themes = "light" | "dark" | "cafe" | "eva" | "unicorn";
 
 export const useUserStore = defineStore('userStore', () => {
     const user = ref<User | null>(null)
@@ -73,11 +73,13 @@ export const useUserStore = defineStore('userStore', () => {
         modes: {
             light: 'light',
             dark: 'dark',
-            cafe: 'cafe'
+            cafe: 'cafe',
+            unicorn: 'unicorn',
+            eva: 'eva',
         }
     })
     
-    function switchToDark(changeTo: themes) {
+    function switchTheme(changeTo: themes) {
         mode.value = changeTo
     }
     
@@ -87,6 +89,6 @@ export const useUserStore = defineStore('userStore', () => {
         refreshToken,
         editUsername,
         mode,
-        switchToDark,
+        switchTheme,
     }
 })
