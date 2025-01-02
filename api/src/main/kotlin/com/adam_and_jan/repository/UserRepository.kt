@@ -9,21 +9,24 @@ import java.sql.Statement
 import com.adam_and_jan.models.User
 
 import org.mindrot.jbcrypt.BCrypt
+import java.sql.ResultSet
 
 class UserRepository(
     private val connection: Connection,
 ) {
     companion object {
-        private const val SELECT_USER_BY_ID = """SELECT username, email, password FROM users WHERE id = ?"""
+        private const val SELECT_USER_BY_ID = """SELECT username, email, password, money, inventory FROM users WHERE id = ?"""
         private const val CHECK_IF_USERNAME_EXISTS = """SELECT username FROM users WHERE username = ?"""
         private const val CHECK_IF_EMAIL_EXISTS = """SELECT email FROM users WHERE email = ?"""
-        private const val SELECT_ALL_USERS = """SELECT username, email, password FROM users"""
+        private const val SELECT_ALL_USERS = """SELECT * FROM users"""
         private const val CREATE_USER = """INSERT INTO users (username, email, password, money, ranking_points) VALUES (?, ?, ?, ?, ?)"""
         private const val SELECT_LOGIN_USER = """SELECT email, password FROM users WHERE email = ?"""
         private const val IF_USER_EXISTS = """SELECT 1 FROM users WHERE email = ?"""
         private const val SET_USER_USERNAME = """UPDATE users SET username = ? WHERE email = ?"""
+        private const val SET_USER_MONEY = """UPDATE users SET money = ? WHERE id = ?"""
+        private const val SET_USER_INVENTORY = """UPDATE users SET inventory = ? WHERE id = ?"""
 
-        private const val SELECT_USER_BY_EMAIL = """SELECT username, email, password FROM users WHERE email = ?"""
+        private const val SELECT_USER_BY_EMAIL = """SELECT * FROM users WHERE email = ?"""
     }
 
     suspend fun create(user: User): Int = withContext(Dispatchers.IO) {
@@ -68,16 +71,28 @@ class UserRepository(
         val resultSet = statement.executeQuery()
 
         if (resultSet.next()) {
-            val username = resultSet.getString("username")
-            val email = resultSet.getString("email")
-            val password = resultSet.getString("password")
+            val user = getUser(resultSet)
 
-            return@withContext UserMapper.toDto(User(username, email, password))
+            return@withContext UserMapper.toDto(user)
         } else {
             throw Exception("User not found")
         }
-
     }
+
+    suspend fun getUserByEmail(email: String): User = withContext(Dispatchers.IO) {
+        val statement = connection.prepareStatement(SELECT_USER_BY_EMAIL)
+        statement.setString(1, email)
+        val resultSet = statement.executeQuery()
+
+        if (resultSet.next()) {
+            val user = getUser(resultSet)
+
+            return@withContext user
+        } else {
+            throw Exception("User not found")
+        }
+    }
+
 
     suspend fun getAllUsers(): List<User> = withContext(Dispatchers.IO) {
         /**
@@ -88,25 +103,22 @@ class UserRepository(
         val users = mutableListOf<User>()
 
         while (resultSet.next()) {
-            val username = resultSet.getString("username")
-            val email = resultSet.getString("email")
-            val password = resultSet.getString("password")
-            users.add(User(username, email, password))
+            val user = getUser(resultSet)
+            users.add(user)
         }
 
         return@withContext users
     }
 
-    suspend fun read(id: Int): UserDto = withContext(Dispatchers.IO) {
+    suspend fun getUserById(id: Int): UserDto = withContext(Dispatchers.IO) {
         val statement = connection.prepareStatement(SELECT_USER_BY_ID)
         statement.setInt(1, id)
         val resultSet = statement.executeQuery()
 
         if (resultSet.next()) {
-            val username = resultSet.getString("username")
-            val email = resultSet.getString("email")
-            val password = resultSet.getString("password")
-            return@withContext UserMapper.toDto(User(username, email, password))
+            val user = getUser(resultSet)
+
+            return@withContext UserMapper.toDto(user)
         } else {
             throw Exception("Record not found")
         }
@@ -147,6 +159,36 @@ class UserRepository(
         }
     }
 
+    suspend fun setUserMoney(id: Int, money: Int): Boolean = withContext(Dispatchers.IO) {
+        val statement = connection.prepareStatement(SET_USER_MONEY)
+        statement.setInt(1, money)
+        statement.setInt(2, id)
+
+        val res = statement.executeUpdate()
+
+        if (res == 1) {
+            return@withContext true
+        }
+        else {
+            throw Exception("Unable to set the user money for $id")
+        }
+    }
+
+    suspend fun addToUserInventory(id: Int, itemId: Int, inv: List<Int>): Boolean = withContext(Dispatchers.IO) {
+        val statement = connection.prepareStatement(SET_USER_INVENTORY)
+        statement.setArray(1, connection.createArrayOf("INTEGER", (inv + itemId).toTypedArray()))
+        statement.setInt(2, id)
+
+        val res = statement.executeUpdate()
+
+        if (res == 1) {
+            return@withContext true
+        }
+        else {
+            throw Exception("Unable to set the user inventory for $id")
+        }
+    }
+
     private fun checkUser(email: String) {
         val userExists = connection.prepareStatement(IF_USER_EXISTS)
         userExists.setString(1, email)
@@ -155,5 +197,18 @@ class UserRepository(
         if (!userExistsResult.next()) {
             throw Exception("User doesn't exist. You must create your account!")
         }
+    }
+
+    private fun getUser(resultSet: ResultSet): User {
+        val id = resultSet.getInt("id")
+        val username = resultSet.getString("username")
+        val email = resultSet.getString("email")
+        val password = resultSet.getString("password")
+        val money = resultSet.getInt("money")
+        val inventory = resultSet.getString("inventory").trimStart('{').trimEnd('}').split(",")
+            .filter { it.isNotEmpty() }
+            .map { it.trim().toInt() }
+
+        return User(id, username, email, password, money, inventory)
     }
 }

@@ -13,7 +13,7 @@ const isAccountShown = ref(true)
 const isStatisticsShown = ref(false)
 
 const schema = z.object({
-    username: z.string().describe("Here you can change your username!").default(userStore.user.username),
+    username: z.string().describe("Here you can change your username!").default(userStore.user?.username),
 })
 const config: Config<any> = {
     username: {
@@ -37,7 +37,7 @@ function showContent(type: "account" | "statistics") {
 }
 
 function onSubmit(values: z.infer<typeof schema>) {
-    if (values.username === userStore.user.username) {
+    if (values.username === userStore.user?.username) {
         return;
     }
     

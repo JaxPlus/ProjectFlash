@@ -3,7 +3,7 @@ import {useColorMode} from "@vueuse/core";
 import {ref} from "vue";
 import User from "@/models/User.ts";
 import axios from "axios";
-import {changePage} from "@/utility.ts";
+import {changePage, retryAction} from "@/utility.ts";
 
 type themes = "light" | "dark" | "cafe" | "eva" | "unicorn";
 
@@ -16,29 +16,35 @@ export const useUserStore = defineStore('userStore', () => {
                 Authorization: `Bearer ${$cookies.get("access-token")}`
             }
         }).then((res) => {
-            // console.log(res)
             user.value = res.data
         }).catch(async (err) => {
             // console.log(err)
-
-            if ($cookies.isKey("refresh-token")) {
-                await refreshToken()
-                await getUser()
-            }
-            else {
+            
+            await retryAction(getUser, () => {
                 user.value = null;
-                changePage('/login');
-            }
+            })
+            
+            // if ($cookies.isKey("refresh-token")) {
+            //     await refreshToken()
+            //     // await getUser()
+            // }
+            // else {
+            //     user.value = null;
+            //     changePage('/login');
+            // }
         })
     }
     
     async function refreshToken() {
-        await axios.post('http://127.0.0.1:8080/api/auth/refresh', {
+        return await axios.post('http://127.0.0.1:8080/api/auth/refresh', {
             token: $cookies.get("refresh-token"),
         }).then((res) => {
             $cookies.set("access-token", res.data.token, import.meta.env.VITE_JWT_ACCESS_TOKEN_EXP, null, null, true)
+            return true;
         }).catch((err) => {
             // console.log(err)
+            $cookies.remove("refresh-token");
+            return false;
         })
     }
     
@@ -68,6 +74,10 @@ export const useUserStore = defineStore('userStore', () => {
         })
     }
     
+    function isUserLoggedIn(): boolean {
+        return user.value !== null;
+    }
+    
     const mode = useColorMode({
         disableTransition: false,
         modes: {
@@ -88,6 +98,7 @@ export const useUserStore = defineStore('userStore', () => {
         getUser,
         refreshToken,
         editUsername,
+        isUserLoggedIn,
         mode,
         switchTheme,
     }

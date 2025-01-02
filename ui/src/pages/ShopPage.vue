@@ -7,9 +7,14 @@ import axios from "axios";
 import {Carousel, CarouselContent, CarouselItem} from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import FeaturedItem from "@/components/FeaturedItem.vue";
+import {useUserStore} from "@/stores/UserStore.ts";
+
+const userStore = useUserStore()
+userStore.getUser()
 
 const lightThemes = ref<Item[]>([])
 const darkThemes = ref<Item[]>([])
+const boxes = ref<Item[]>([])
 
 const featured = ref<Item[]>([])
 
@@ -29,6 +34,9 @@ onMounted(async () => {
                 break;
             case "light":
                 lightThemes.value.push(item);
+                break;
+            case "box":
+                boxes.value.push(item);
                 break;
         }
     }

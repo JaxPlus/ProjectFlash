@@ -22,8 +22,8 @@ class UserService(
     suspend fun getAllUsers(): List<User> =
         userRepository.getAllUsers()
 
-    suspend fun read(id: Int): UserDto =
-        userRepository.read(id)
+    suspend fun getUserById(id: Int): UserDto =
+        userRepository.getUserById(id)
 
     suspend fun getLoginUser(email: String, password: String): Boolean =
         userRepository.getLoginUser(email, password)
