@@ -10,19 +10,19 @@ export async function retryAction(retryFun: () => void, additional: () => void =
     
     if ($cookies.isKey("refresh-token")) {
         const res = await userStore.refreshToken()
-
-        console.log(apiCalls)
+        // console.log(apiCalls)
         
-        if (res) {
-            await retryFun()
-            return;
-        }
-        
-        if (apiCalls >= 0) {
+        if (apiCalls > 0) {
             apiCalls -= 1;
             await retryAction(retryFun, additional, apiCalls)
         }
         else {
+            return;
+        }
+
+        if (res) {
+            apiCalls -= 1;
+            await retryAction(retryFun, additional, apiCalls)
             return;
         }
     }

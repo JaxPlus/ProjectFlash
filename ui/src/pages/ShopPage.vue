@@ -6,7 +6,6 @@ import Item from "@/models/Item.ts";
 import axios from "axios";
 import {Carousel, CarouselContent, CarouselItem} from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
-import FeaturedItem from "@/components/FeaturedItem.vue";
 import {useUserStore} from "@/stores/UserStore.ts";
 
 const userStore = useUserStore()
@@ -15,7 +14,6 @@ userStore.getUser()
 const lightThemes = ref<Item[]>([])
 const darkThemes = ref<Item[]>([])
 const boxes = ref<Item[]>([])
-
 const featured = ref<Item[]>([])
 
 const plugin = Autoplay({
@@ -45,22 +43,24 @@ onMounted(async () => {
     featured.value.push(response.data[3])
     featured.value.push(response.data[2])
 })
-
 </script>
-
 
 <template>
     <div class="w-full h-full">
         <div class="w-4/5 min-h-screen rounded-3xl mx-auto my-10 bg-secondary border border-primary">
             <div class="h-72 m-4">
                 <Carousel
-                :plugins="[plugin]"
-                @mouseenter="plugin.stop"
-                @mouseleave="[plugin.reset(), plugin.play()];"
-                    >
+                    :plugins="[plugin]"
+                    @mouseenter="plugin.stop"
+                    @mouseleave="[plugin.reset(), plugin.play()];"
+                >
                     <CarouselContent>
                         <CarouselItem v-for="item in featured">
-                            <FeaturedItem :item="item" />
+                            <div class="h-72 rounded-2xl">
+                                <ShopItem :show-display-name="true"
+                                          class="w-full h-full scale-95 rounded-2xl outline-primary outline outline-2 outline-offset-2 select-none grid grid-cols-3"
+                                          :item="item"/>
+                            </div>
                         </CarouselItem>
                     </CarouselContent>
                 </Carousel>

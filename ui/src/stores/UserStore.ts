@@ -4,11 +4,12 @@ import {ref} from "vue";
 import User from "@/models/User.ts";
 import axios from "axios";
 import {changePage, retryAction} from "@/utility.ts";
+import Item from "@/models/Item.ts";
 
-type themes = "light" | "dark" | "cafe" | "eva" | "unicorn";
+type themes = "light" | "dark" | "cafe" | "eva" | "unicorn" | string;
 
 export const useUserStore = defineStore('userStore', () => {
-    const user = ref<User | null>(null)
+    const user = ref<User | null>({})
     
     async function getUser() {
         await axios.get('http://localhost:8080/user', {
@@ -74,6 +75,21 @@ export const useUserStore = defineStore('userStore', () => {
         })
     }
     
+    async function getInventoryItems(): Promise<Item[]> {
+        let items: Item[] = [];
+        for (const itemId of user.value?.inventory) {
+            await axios.get(`http://localhost:8080/shop/${itemId}`)
+                .then(res => {
+                    items.push(res.data)
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        }
+        
+        return items;
+    }
+    
     function isUserLoggedIn(): boolean {
         return user.value !== null;
     }
@@ -98,6 +114,7 @@ export const useUserStore = defineStore('userStore', () => {
         getUser,
         refreshToken,
         editUsername,
+        getInventoryItems,
         isUserLoggedIn,
         mode,
         switchTheme,

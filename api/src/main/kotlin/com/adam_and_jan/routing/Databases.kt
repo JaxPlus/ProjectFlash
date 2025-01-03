@@ -121,6 +121,18 @@ fun Application.configureDatabases(
                 call.respond(HttpStatusCode.BadRequest, e.message ?: "Unable to get shop items")
             }
         }
+
+        get("/shop/{id}") {
+            val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
+
+            try {
+                val item = shopRepository.getShopItem(id)
+                call.respond(HttpStatusCode.OK, item)
+            }
+            catch (e: Exception) {
+                call.respond(HttpStatusCode.BadRequest, e.message ?: "Unable to get shop items")
+            }
+        }
     }
 }
 

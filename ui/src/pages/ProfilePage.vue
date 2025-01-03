@@ -1,9 +1,17 @@
 ﻿<script setup lang="ts">
-
 import {useUserStore} from "@/stores/UserStore.ts";
+import {onMounted, ref} from "vue";
+import Item from "@/models/Item.ts";
+import InventoryItem from "@/components/InventoryItem.vue";
 
 const userStore = useUserStore()
-userStore.getUser()
+
+const items = ref<Item[]>([])
+
+onMounted(async () => {
+    await userStore.getUser()
+    items.value = await userStore.getInventoryItems()
+})
 
 </script>
 
@@ -20,8 +28,8 @@ userStore.getUser()
             <div class="w-full flex flex-col items-start mt-4 border border-primary rounded-2xl bg-secondary p-4">
                 <h3 class="text-lg">Money: {{ userStore.user?.money }}</h3>
                 <h4 class="text-lg">Inventory:</h4>
-                <div>
-                    <p v-for="item in userStore.user?.inventory">{{ item }}</p>
+                <div class="grid grid-cols-2 lg:grid-cols-3 w-full">
+                    <InventoryItem v-for="item in items" :item="item"/>
                 </div>
             </div>
         </div>
