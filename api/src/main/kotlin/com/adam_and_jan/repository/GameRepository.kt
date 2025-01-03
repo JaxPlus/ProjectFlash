@@ -5,7 +5,6 @@ import com.adam_and_jan.mappers.GameMapper
 import com.adam_and_jan.models.Game
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.sql.Statement
 import java.sql.Connection
 
 class GameRepository(

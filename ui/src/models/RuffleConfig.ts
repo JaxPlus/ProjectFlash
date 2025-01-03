@@ -45,7 +45,7 @@ export type APIVersions = {
     1: PlayerV1;
 };
 
-export interface PlayerElement {
+export interface PlayerElement extends Node {
     ruffle<V extends 1 = 1>(version?: V): APIVersions[V];
     onFSCommand: ((command: string, args: string) => void) | null;
     config: object | URLLoadOptions | DataLoadOptions;
@@ -81,7 +81,7 @@ declare global {
     interface Window {
         RufflePlayer: {
             config: RuffleConfig;
-            newest: SourceAPI;
+            newest(): SourceAPI;
         };
     }
 }
