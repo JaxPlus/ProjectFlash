@@ -1,5 +1,6 @@
 ﻿package com.adam_and_jan.routing
 
+import com.adam_and_jan.dto.UserCreateDto
 import com.adam_and_jan.dto.UserLoginDto
 import com.adam_and_jan.models.User
 import com.adam_and_jan.plugins.services.ShopService
@@ -101,7 +102,7 @@ fun Application.configureDatabases(
         }
 
         post("/users") {
-            val user = call.receive<User>()
+            val user = call.receive<UserCreateDto>()
 
             try {
                 val id = userRepository.create(user)

@@ -1,5 +1,6 @@
 package com.adam_and_jan.repository
 
+import com.adam_and_jan.dto.UserCreateDto
 import com.adam_and_jan.dto.UserDto
 import com.adam_and_jan.mappers.UserMapper
 import kotlinx.coroutines.Dispatchers
@@ -19,7 +20,7 @@ class UserRepository(
         private const val CHECK_IF_USERNAME_EXISTS = """SELECT username FROM users WHERE username = ?"""
         private const val CHECK_IF_EMAIL_EXISTS = """SELECT email FROM users WHERE email = ?"""
         private const val SELECT_ALL_USERS = """SELECT * FROM users"""
-        private const val CREATE_USER = """INSERT INTO users (username, email, password, money, ranking_points) VALUES (?, ?, ?, ?, ?)"""
+        private const val CREATE_USER = """INSERT INTO users (username, email, password, money, ranking_points, inventory) VALUES (?, ?, ?, ?, ?, ?)"""
         private const val SELECT_LOGIN_USER = """SELECT email, password FROM users WHERE email = ?"""
         private const val IF_USER_EXISTS = """SELECT 1 FROM users WHERE email = ?"""
         private const val SET_USER_USERNAME = """UPDATE users SET username = ? WHERE email = ?"""
@@ -29,13 +30,16 @@ class UserRepository(
         private const val SELECT_USER_BY_EMAIL = """SELECT * FROM users WHERE email = ?"""
     }
 
-    suspend fun create(user: User): Int = withContext(Dispatchers.IO) {
+    suspend fun create(userDto: UserCreateDto): Int = withContext(Dispatchers.IO) {
+        val user = User(-1, userDto.username, userDto.email, userDto.password, 0, listOf())
+
         val statement = connection.prepareStatement(CREATE_USER, Statement.RETURN_GENERATED_KEYS)
         statement.setString(1, user.username)
         statement.setString(2, user.email)
         statement.setString(3, user.hashedPassword())
         statement.setInt(4, 0)
         statement.setInt(5, 0)
+        statement.setArray(6, connection.createArrayOf("INTEGER", listOf(1, 2).toTypedArray()))
 
         val usernameStatement = connection.prepareStatement(CHECK_IF_USERNAME_EXISTS)
         usernameStatement.setString(1, user.username)

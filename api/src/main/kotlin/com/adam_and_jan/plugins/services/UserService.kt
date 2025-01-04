@@ -1,5 +1,6 @@
 ﻿package com.adam_and_jan.plugins.services
 
+import com.adam_and_jan.dto.UserCreateDto
 import com.adam_and_jan.dto.UserDto
 import com.adam_and_jan.dto.UserLoginDto
 import com.adam_and_jan.models.User
@@ -13,7 +14,7 @@ class UserService(
     private val jwtService: JwtService,
     private val refreshTokenRepository: RefreshTokenRepository
 ) {
-    suspend fun create(user: User): Int =
+    suspend fun create(user: UserCreateDto): Int =
         userRepository.create(user)
 
     suspend fun findUserByEmail(email: String): UserDto =

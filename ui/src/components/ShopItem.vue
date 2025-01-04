@@ -14,6 +14,7 @@ import {
 import {Button} from "@/components/ui/button";
 import axios from "axios";
 import {retryAction} from "@/utility.ts";
+import FlashPopover from "@/components/FlashPopover.vue";
 
 const props = defineProps<{
     item: Item;
@@ -31,6 +32,7 @@ const isDisabled = computed(() => {
 
     return true;
 });
+const isPopoverShown = ref(false);
 const defaultTheme = ref({
     primary: "bg-[#29bcbc]",
     secondary: "bg-[#e6ebeb]",
@@ -44,18 +46,17 @@ function buyItem() {
         headers: {
             Authorization: `Bearer ${$cookies.get("access-token")}`
         }
-    }).then(res => {
+    }).then(() => {
+        isPopoverShown.value = true;
         userStore.user?.inventory.push(props.item.id);
 
-        console.log(res)
-    }).catch(async (err) => {
+    }).catch(async () => {
         await retryAction(buyItem);
-    })
+    });
 }
 
 /**
  * jeżeli potrzeba potestować motywy to wystarczy dodać to @click="userStore.switchTheme(props.item.name)" do <DialogTrigger>
- * @todo Trzeba zrobić popovera jakiegoś czy coś żeby użytkownik wiedział że coś kupił
  */
 </script>
 
@@ -95,4 +96,5 @@ function buyItem() {
             </DialogFooter>
         </DialogContent>
     </Dialog>
+    <FlashPopover v-if="isPopoverShown" message="Successfully bought an item!" variant="success" :duration="6000" />
 </template>

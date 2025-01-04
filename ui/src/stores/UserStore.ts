@@ -45,6 +45,7 @@ export const useUserStore = defineStore('userStore', () => {
         }).catch((err) => {
             // console.log(err)
             $cookies.remove("refresh-token");
+            $cookies.remove("access-token");
             return false;
         })
     }
@@ -93,6 +94,15 @@ export const useUserStore = defineStore('userStore', () => {
     function isUserLoggedIn(): boolean {
         return user.value !== null;
     }
+
+    function logOut() {
+        $cookies.remove("access-token");
+        $cookies.remove("refresh-token");
+        switchTheme("light");
+        user.value = {};
+
+        changePage("/");
+    }
     
     const mode = useColorMode({
         disableTransition: false,
@@ -116,6 +126,7 @@ export const useUserStore = defineStore('userStore', () => {
         editUsername,
         getInventoryItems,
         isUserLoggedIn,
+        logOut,
         mode,
         switchTheme,
     }
