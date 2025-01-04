@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import GameCardGroup from "@/components/GameCardGroup.vue";
 
-const gameCards = ["Minecraft", "", "", "", "", "", ""];
+const gameCards = ["Minecraft", "", ""];
+const gameIds = [3,8,3];
 
 </script>
 
@@ -12,8 +13,8 @@ const gameCards = ["Minecraft", "", "", "", "", "", ""];
             One Site. Million Games.
         </p>
     </div>
-    <GameCardGroup group-title="Recommended" :game-cards="gameCards" />
-    <GameCardGroup group-title="Recommended" :game-cards="gameCards" />
+    <GameCardGroup group-title="Recommended" :game-cards="gameCards" :game-ids="gameIds" />
+    <GameCardGroup group-title="Recommended" :game-cards="gameCards" :game-ids="gameIds" />
 </template>
 
 <style scoped>

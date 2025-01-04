@@ -4,10 +4,12 @@ import {changePage} from "@/utility.ts";
 
 const props = defineProps<{
     title: string
+    gameId: number
 }>()
 
 function goToGame() {
-  changePage('/game')
+  localStorage.setItem('gameId', props.gameId.toString());
+  changePage('/game');
 }
 
 </script>

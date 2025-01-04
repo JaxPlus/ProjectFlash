@@ -4,8 +4,9 @@ import GameCard from "@/components/GameCard.vue";
 import {ScrollArea} from "@/components/ui/scroll-area";
 
 const props = defineProps<{
-    groupTitle: string
-    gameCards: string[]
+    groupTitle: string;
+    gameCards: string[];
+    gameIds: number[];
 }>()
 </script>
 
@@ -14,8 +15,8 @@ const props = defineProps<{
         <h3 class="w-[18rem] p-1 px-3 ml-2 mb-4 rounded-2xl text-left bg-secondary-color">{{ groupTitle }}</h3>        
         <ScrollArea>
             <div class="flex pb-4 space-x-4 w-max">
-                <div v-for="gameCard in gameCards">
-                    <GameCard :title="gameCard" />
+                <div v-for="(gameCard, index) in gameCards">
+                    <GameCard :title="gameCard" :game-id="gameIds[index]" />
                 </div>
             </div>
         </ScrollArea>

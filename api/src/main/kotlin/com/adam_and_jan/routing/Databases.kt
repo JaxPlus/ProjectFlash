@@ -2,6 +2,7 @@
 
 import com.adam_and_jan.dto.UserLoginDto
 import com.adam_and_jan.models.User
+import com.adam_and_jan.repository.GameRepository
 import com.adam_and_jan.repository.UserRepository
 import io.github.cdimascio.dotenv.dotenv
 import io.ktor.http.*
@@ -18,8 +19,21 @@ fun Application.configureDatabases() {
 
     val dbconnection: Connection = connectToPostgres(embedded = true)
     val userRepository = UserRepository(dbconnection)
+    val gameRepository = GameRepository(dbconnection)
 
     routing {
+
+        get("/games/{id}") {
+            val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
+            try {
+                val game = gameRepository.getGame(id)
+
+                call.respond(HttpStatusCode.OK, game)
+            } catch (e: Exception) {
+                call.respond(HttpStatusCode.NotFound, e.message ?: "nie działa")
+            }
+        }
+
 
         authenticate {
             get("/users") {

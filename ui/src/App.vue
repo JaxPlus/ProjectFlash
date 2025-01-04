@@ -1,16 +1,5 @@
 <script setup lang="ts">
 import Navbar from "./components/Navbar.vue";
-// import {useRuffleStore} from "@/stores/RuffleStore.ts";
-
-// const ruffleStore = useRuffleStore();
-// const player = ruffleStore.getRufflePlayer();
-//
-// window.addEventListener("DOMContentLoaded", () => {
-//     let container = document.getElementById("container");
-//     container.appendChild(player);
-//     player.load("public/gameTest/BindingOfIsaac.swf");
-// })
-
 </script>
 
 <template>
