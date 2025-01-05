@@ -3,9 +3,8 @@
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class UserDto(
+data class UserCreateDto(
     val username: String,
     val email: String,
-    val money: Int,
-    val inventory: List<Int>,
+    val password: String,
 )

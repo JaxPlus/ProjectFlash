@@ -35,7 +35,7 @@ function goToRegister() {
 
 <template>
     <div class="w-full h-[calc(100vh-8.5rem)] flex items-center justify-center">
-        <div class="w-1/3 bg-secondary-color p-10 rounded-2xl">
+        <div class="w-1/3 bg-secondary border border-primary p-10 rounded-2xl">
             <h2 class="text-2xl mb-5 font-bold">Sign In</h2>
             <SignInUpForm />
             <p class="mt-5">Don't have an account? <a class="text-blue-600 cursor-pointer" @click="goToRegister()">Sign up here</a>!</p>

@@ -1,8 +1,12 @@
 ﻿package com.adam_and_jan.routing
 
+import com.adam_and_jan.dto.UserCreateDto
 import com.adam_and_jan.dto.UserLoginDto
 import com.adam_and_jan.models.User
+import com.adam_and_jan.plugins.services.ShopService
+import com.adam_and_jan.repository.ShopRepository
 import com.adam_and_jan.repository.UserRepository
+import com.adam_and_jan.routing.request.ShopItemRequest
 import com.adam_and_jan.routing.request.UsernameRequest
 import io.github.cdimascio.dotenv.dotenv
 import io.ktor.http.*
@@ -15,10 +19,13 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import java.sql.*
 
-fun Application.configureDatabases() {
+fun Application.configureDatabases(
+    shopService: ShopService,
+) {
 
     val dbconnection: Connection = connectToPostgres(embedded = true)
     val userRepository = UserRepository(dbconnection)
+    val shopRepository = ShopRepository(dbconnection)
 
     routing {
         authenticate {
@@ -36,7 +43,7 @@ fun Application.configureDatabases() {
             get("/users/{id}") {
                 val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
                 try {
-                    val user = userRepository.read(id)
+                    val user = userRepository.getUserById(id)
 
                     if(user.email == extractPrincipalEmail(call))
                         call.respond(HttpStatusCode.OK, user)
@@ -67,6 +74,19 @@ fun Application.configureDatabases() {
                     call.respond(HttpStatusCode.NotFound, e.message ?: "")
                 }
             }
+
+            post("/shop") {
+                try {
+                    val email = extractPrincipalEmail(call) ?: throw IllegalArgumentException("Invalid Email")
+                    val itemRequest = call.receive<ShopItemRequest>()
+
+                    var res = shopService.buyShopItem(itemRequest.itemId, email)
+
+                    call.respond(HttpStatusCode.OK, res)
+                } catch (e: Exception) {
+                    call.respond(HttpStatusCode.BadRequest, e.message ?: "")
+                }
+            }
         }
 
         post("/login") {
@@ -82,7 +102,7 @@ fun Application.configureDatabases() {
         }
 
         post("/users") {
-            val user = call.receive<User>()
+            val user = call.receive<UserCreateDto>()
 
             try {
                 val id = userRepository.create(user)
@@ -90,6 +110,28 @@ fun Application.configureDatabases() {
             }
             catch (e: Exception) {
                 call.respond(HttpStatusCode.BadRequest, e.message ?: "")
+            }
+        }
+
+        get("/shop") {
+            try {
+                val items = shopRepository.getAllShopItems()
+                call.respond(HttpStatusCode.OK, items)
+            }
+            catch (e: Exception) {
+                call.respond(HttpStatusCode.BadRequest, e.message ?: "Unable to get shop items")
+            }
+        }
+
+        get("/shop/{id}") {
+            val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
+
+            try {
+                val item = shopRepository.getShopItem(id)
+                call.respond(HttpStatusCode.OK, item)
+            }
+            catch (e: Exception) {
+                call.respond(HttpStatusCode.BadRequest, e.message ?: "Unable to get shop items")
             }
         }
     }
