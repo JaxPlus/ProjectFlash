@@ -4,6 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Game(
+    val id: Int,
     val title: String,
     val description: String,
     val rating: Double,

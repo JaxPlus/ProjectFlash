@@ -1,8 +1,26 @@
 <script setup lang="ts">
 import GameCardGroup from "@/components/GameCardGroup.vue";
+import {useGameStore} from "@/stores/GameStore.ts";
+import {onMounted, ref} from "vue";
 
-const gameCards = ["Minecraft", "", ""];
-const gameIds = [3,8,3];
+const gameStore = useGameStore();
+
+const allGameNames: string[] = [];
+const allGameIds: number[] = [];
+
+const isLoading = ref(false)
+
+onMounted(async () => {
+  isLoading.value = true
+
+  let allGames = await gameStore.getAllGames()
+
+  allGames.forEach((game) => {
+    allGameNames.push(game.title);
+    allGameIds.push(game.id);
+  })
+  isLoading.value = false
+})
 
 </script>
 
@@ -13,8 +31,7 @@ const gameIds = [3,8,3];
             One Site. Million Games.
         </p>
     </div>
-    <GameCardGroup group-title="Recommended" :game-cards="gameCards" :game-ids="gameIds" />
-    <GameCardGroup group-title="Recommended" :game-cards="gameCards" :game-ids="gameIds" />
+    <GameCardGroup v-if="!isLoading" group-title="Recommended" :game-cards="allGameNames" :game-ids="allGameIds" />
 </template>
 
 <style scoped>
