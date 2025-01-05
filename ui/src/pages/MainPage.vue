@@ -7,7 +7,7 @@ const gameIds = [3,8,3];
 </script>
 
 <template>
-    <div class="w-full h-[20rem] bg-primary-color flex flex-col items-center justify-center">
+    <div class="w-full h-[20rem] bg-primary flex flex-col items-center justify-center">
         <h1 class="text-8xl font-bold">Flash World</h1>
         <p>
             One Site. Million Games.

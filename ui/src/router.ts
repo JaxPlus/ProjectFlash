@@ -1,16 +1,20 @@
 ﻿import { createMemoryHistory, createRouter } from 'vue-router'
 
-import HelloWorld from "./pages/MainPage.vue";
+import MainPage from "./pages/MainPage.vue";
 import ProfilePage from "@/pages/ProfilePage.vue";
 import LoginPage from "@/pages/LoginPage.vue";
 import RegisterPage from "@/pages/RegisterPage.vue";
+import SettingsPage from "@/pages/SettingsPage.vue";
+import ShopPage from "@/pages/ShopPage.vue";
 import GamePage from "@/pages/GamePage.vue";
 
 const routes = [
-    { path: '/', component: HelloWorld },
+    { path: '/', component: MainPage },
     { path: '/login', component: LoginPage },
     { path: '/register', component: RegisterPage },
     { path: '/profile', component: ProfilePage },
+    { path: '/settings', component: SettingsPage },
+    { path: '/shop', component: ShopPage },
     { path: '/game', component: GamePage },
 ]
 

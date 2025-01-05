@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import Navbar from "./components/Navbar.vue";
+import {useUserStore} from "@/stores/UserStore.ts";
+const userStore = useUserStore()
 </script>
 
 <template>
@@ -13,7 +15,7 @@ import Navbar from "./components/Navbar.vue";
 <style>
 body {
     color: hsl(var(--text-color));
-    background-color: hsl(var(--background-color));
+    background-color: hsl(var(--background));
     margin: 0;
     min-width: 320px;
     min-height: 100vh;
@@ -22,8 +24,8 @@ body {
 svg {
     width: 3em;
     height: 3em;
-    fill: hsl(var(--background-color));
-    stroke: hsl(var(--background-color));
+    fill: hsl(var(--background));
+    stroke: hsl(var(--background));
 }
 
 @media (prefers-color-scheme: light) {

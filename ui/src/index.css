@@ -4,93 +4,174 @@
  
 @layer base {
   :root {
-    font-family: 'Yu Gothic', sans-serif;
-    
     /* mocny szary */
     --text-color: 240 2% 23%;
-    /* jasny szary */
-    --background-color: 0 0% 90%;
-    /* turkus */
-    --primary-color: 180 64% 45%;
-    /* szarawy */
-    --secondary-color: 0 0% 58%;
     
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
- 
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
- 
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
- 
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
- 
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
- 
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
- 
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
- 
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
- 
-    --destructive: 0 84.2% 60.2%;
+    --background: 180 8% 95%;
+    --foreground: 180 8% 5%;
+
+    --card: 180 8% 95%;
+    --card-foreground: 180 8% 5%;
+
+    --popover: 180 8% 95%;
+    --popover-foreground: 180 8% 5%;
+
+    --primary: 180 64% 45%;
+    --primary-foreground: 180 9% 2%;
+
+    --secondary: 180 11% 91%;
+    --secondary-foreground: 180 8% 5%;
+
+    --muted: 180 9% 91%;
+    --muted-foreground: 180 9% 45%;
+
+    --accent: 180 11% 91%;
+    --accent-foreground: 180 8% 5%;
+
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
- 
-    --ring: 0 0% 3.9%;
- 
+
+    --border: 180 9% 87%;
+    --input: 180 9% 81%;
+    --ring: 180 36% 72%;
+
     --radius: 0.5rem;
   }
  
   .dark {
     --text-color: 0 0% 83%;
-    --background-color: 206 24% 11%;
-    --primary-color: 359 93% 40%;
-    --secondary-color: 359 87% 21%;
-    
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
- 
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
- 
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
- 
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
- 
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
- 
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
- 
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
- 
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
- 
-    --destructive: 0 62.8% 30.6%;
+
+    --background: 0 7% 12%;
+    --foreground: 300 9% 98%;
+
+    --card: 0 7% 8%;
+    --card-foreground: 300 9% 98%;
+
+    --popover: 0 7% 8%;
+    --popover-foreground: 300 9% 98%;
+
+    --primary: 359 93% 40%;
+    --primary-foreground: 300 9% 98%;
+
+    --secondary: 0 7% 14%;
+    --secondary-foreground: 300 9% 98%;
+
+    --muted: 0 8% 24%;
+    --muted-foreground: 0 8% 49%;
+
+    --accent: 359 73% 16%;
+    --accent-foreground: 300 9% 98%;
+
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
- 
-    --ring: 0 0% 83.1%;
+
+    --border: 0 8% 12%;
+    --input: 0 9% 18%;
+    --ring: 359 93% 40%;
   }
   
   .cafe {
-    --text-color: 43 100% 83%;
-    --background-color: 43 100% 83%;
-    --primary-color: 37 42% 54%;
-    --secondary-color: 25, 57%, 38%;
+    --text-color: 30 45% 21%;
+    
+    --background: 30 8% 95%;
+    --foreground: 30 8% 5%;
+
+    --card: 40 10% 94%;
+    --card-foreground: 30 8% 5%;
+
+    --popover: 40 10% 94%;
+    --popover-foreground: 30 8% 5%;
+
+    --primary: 35 34% 69%;
+    --primary-foreground: 0 9% 2%;
+
+    --secondary: 30 12% 91%;
+    --secondary-foreground: 30 8% 5%;
+
+    --muted: 30 8% 91%;
+    --muted-foreground: 37 9% 45%;
+
+    --accent: 30 8% 91%;
+    --accent-foreground: 30 8% 5%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 40 9% 87%;
+    --input: 33 9% 80%;
+    --ring: 36 36% 72%;
+
+    --radius: 0.5rem;
+  }
+  
+  .unicorn {
+    --text-color: 327 27% 49%;
+    
+    --background: 0 0% 98%;
+    --foreground: 330 8% 5%;
+
+    --card: 0 8% 97%;
+    --card-foreground: 330 8% 5%;
+
+    --popover: 0 8% 97%;
+    --popover-foreground: 330 8% 5%;
+
+    --primary: 307 100% 92%;
+    --primary-foreground: 0 0% 2%;
+
+    --secondary: 300, 46%, 78%;
+    --secondary-foreground: 330 8% 5%;
+
+    --muted: 300 6% 93%;
+    --muted-foreground: 309 6% 45%;
+
+    --accent: 300 6% 93%;
+    --accent-foreground: 330 8% 5%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 300 6% 90%;
+    --input: 310 7% 82%;
+    --ring: 308 24% 74%;
+
+    --radius: 0.5rem;
+  }
+  
+  .eva {
+    --text-color: 85 65% 60%;
+    
+    --background: 300 3% 6%;
+    --foreground: 0 0% 98%;
+
+    --card: 300 6% 7%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 300 6% 7%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 278 45% 60%;
+    --primary-foreground: 0 0% 98%;
+    
+    --secondary: 3 55% 45%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 280 5% 22%;
+    --muted-foreground: 280 5% 49%;
+
+    --accent: 278 45% 14%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 280 5% 12%;
+    --input: 285 4% 18%;
+    --ring: 278 45% 40%;
   }
 
   #app {
+    font-family: 'Yu Gothic', sans-serif;
     min-height: 100vh;
     min-width: 100%;
     max-width: 1280px;

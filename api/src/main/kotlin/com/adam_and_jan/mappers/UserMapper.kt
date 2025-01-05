@@ -8,6 +8,8 @@ object UserMapper {
         return UserDto(
             user.username,
             user.email,
+            user.money,
+            user.inventory,
         )
     }
 }
