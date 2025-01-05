@@ -2,7 +2,6 @@
 
 import com.adam_and_jan.dto.UserCreateDto
 import com.adam_and_jan.dto.UserLoginDto
-import com.adam_and_jan.models.User
 import com.adam_and_jan.repository.GameRepository
 import com.adam_and_jan.plugins.services.ShopService
 import com.adam_and_jan.repository.ShopRepository
@@ -31,6 +30,17 @@ fun Application.configureDatabases(
 
     routing {
 
+        get("/games") {
+            try {
+                val games = gameRepository.getAllGames()
+                call.respond(HttpStatusCode.OK, games)
+            }
+            catch (e: Exception) {
+                println("Error: ${e.message}")
+                call.respond(HttpStatusCode.NotFound)
+            }
+        }
+
         get("/games/{id}") {
             val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
             try {
@@ -38,7 +48,7 @@ fun Application.configureDatabases(
 
                 call.respond(HttpStatusCode.OK, game)
             } catch (e: Exception) {
-                call.respond(HttpStatusCode.NotFound, e.message ?: "nie działa")
+                call.respond(HttpStatusCode.NotFound, e.message ?: "")
             }
         }
 
