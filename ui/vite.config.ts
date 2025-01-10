@@ -3,6 +3,7 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import tailwind from 'tailwindcss'
 import autoprefixer from 'autoprefixer'
+import dynamicImport from "vite-plugin-dynamic-import";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -11,10 +12,12 @@ export default defineConfig({
       plugins: [tailwind(), autoprefixer()],
     }
   },
-  plugins: [vue()],
+  assetsInclude: "**/*.swf",
+  plugins: [vue(), dynamicImport()],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      '@files': path.resolve(__dirname, '../files'),
     },
   },
 })

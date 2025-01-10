@@ -2,10 +2,11 @@
 
 import com.adam_and_jan.dto.UserCreateDto
 import com.adam_and_jan.dto.UserLoginDto
-import com.adam_and_jan.models.User
+import com.adam_and_jan.repository.GameRepository
 import com.adam_and_jan.plugins.services.ShopService
 import com.adam_and_jan.repository.ShopRepository
 import com.adam_and_jan.repository.UserRepository
+import com.adam_and_jan.routing.request.ProfileImgRequest
 import com.adam_and_jan.routing.request.ShopItemRequest
 import com.adam_and_jan.routing.request.UsernameRequest
 import io.github.cdimascio.dotenv.dotenv
@@ -14,10 +15,14 @@ import io.ktor.server.application.*
 import io.ktor.server.auth.authenticate
 import io.ktor.server.auth.jwt.JWTPrincipal
 import io.ktor.server.auth.principal
+import io.ktor.server.http.content.staticFiles
+import io.ktor.server.http.content.staticResources
 import io.ktor.server.request.receive
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import java.io.File
 import java.sql.*
+import kotlin.io.path.Path
 
 fun Application.configureDatabases(
     shopService: ShopService,
@@ -25,9 +30,33 @@ fun Application.configureDatabases(
 
     val dbconnection: Connection = connectToPostgres(embedded = true)
     val userRepository = UserRepository(dbconnection)
+    val gameRepository = GameRepository(dbconnection)
     val shopRepository = ShopRepository(dbconnection)
 
     routing {
+
+        get("/games") {
+            try {
+                val games = gameRepository.getAllGames()
+                call.respond(HttpStatusCode.OK, games)
+            }
+            catch (e: Exception) {
+                println("Error: ${e.message}")
+                call.respond(HttpStatusCode.NotFound)
+            }
+        }
+
+        get("/games/{id}") {
+            val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
+            try {
+                val game = gameRepository.getGame(id)
+
+                call.respond(HttpStatusCode.OK, game)
+            } catch (e: Exception) {
+                call.respond(HttpStatusCode.NotFound, e.message ?: "")
+            }
+        }
+
         authenticate {
             get("/users") {
                 try {
@@ -87,6 +116,19 @@ fun Application.configureDatabases(
                     call.respond(HttpStatusCode.BadRequest, e.message ?: "")
                 }
             }
+
+            post("/user/profile") {
+                try {
+                    val email = extractPrincipalEmail(call) ?: throw IllegalArgumentException("Invalid Email")
+                    val img = call.receive<ProfileImgRequest>()
+
+                    val res = userRepository.setUserProfile(img.img, email)
+
+                    call.respond(HttpStatusCode.OK, res)
+                } catch (e: Exception) {
+                    call.respond(HttpStatusCode.BadRequest, e.message ?: "")
+                }
+            }
         }
 
         post("/login") {
@@ -109,7 +151,7 @@ fun Application.configureDatabases(
                 call.respond(HttpStatusCode.Created, id)
             }
             catch (e: Exception) {
-                call.respond(HttpStatusCode.BadRequest, e.message ?: "")
+                call.respond(HttpStatusCode.BadRequest, "${e.stackTrace}: ${e.message}" ?: "")
             }
         }
 

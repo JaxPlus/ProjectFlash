@@ -5,7 +5,7 @@ export const changePage = (pathStr: string) => {
     router.push({path: pathStr});
 };
 
-export async function retryAction(retryFun: () => void, additional: () => void = () => {}, apiCalls = 1) {
+export async function retryAction(retryFun: Function, additional: () => void = () => {}, apiCalls = 1) {
     const userStore = useUserStore()
     
     if ($cookies.isKey("refresh-token")) {

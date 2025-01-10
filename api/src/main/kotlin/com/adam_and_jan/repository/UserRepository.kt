@@ -8,9 +8,14 @@ import kotlinx.coroutines.withContext
 import java.sql.Connection
 import java.sql.Statement
 import com.adam_and_jan.models.User
+import com.adam_and_jan.routing.request.ProfileImgRequest
 
 import org.mindrot.jbcrypt.BCrypt
 import java.sql.ResultSet
+import java.util.Base64
+import kotlin.io.path.Path
+import kotlin.io.path.createDirectory
+import kotlin.io.path.writeBytes
 
 class UserRepository(
     private val connection: Connection,
@@ -62,6 +67,7 @@ class UserRepository(
         val generatedKeys = statement.generatedKeys
 
         if (generatedKeys.next()) {
+            Path("../files/users/${user.username}").createDirectory()
             return@withContext generatedKeys.getInt(1)
         } else {
             throw Exception("Unable to retrieve the id of the newly created user.")
@@ -96,7 +102,6 @@ class UserRepository(
             throw Exception("User not found")
         }
     }
-
 
     suspend fun getAllUsers(): List<User> = withContext(Dispatchers.IO) {
         /**
@@ -191,6 +196,18 @@ class UserRepository(
         else {
             throw Exception("Unable to set the user inventory for $id")
         }
+    }
+
+    suspend fun setUserProfile(img: String, email: String): Boolean = withContext(Dispatchers.IO) {
+        val user = getUserByEmail(email)
+
+        val validImgBase64 = img.split(',')[1]
+
+        val pictureBytes = Base64.getMimeDecoder().decode(validImgBase64)
+        val path = Path("../files/users/${user.username}/avatar.png")
+        path.writeBytes(pictureBytes)
+
+        return@withContext true
     }
 
     private fun checkUser(email: String) {

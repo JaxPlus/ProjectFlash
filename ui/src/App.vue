@@ -5,10 +5,10 @@ const userStore = useUserStore()
 </script>
 
 <template>
-  <Navbar />
-  <main>
-    <RouterView />
-  </main>
+    <Navbar/>
+    <main>
+        <RouterView/>
+    </main>
 </template>
 
 <style>
@@ -32,9 +32,11 @@ svg {
         color: #161A1D;
         background-color: #D3D3D3;
     }
+
     a:hover {
         color: #747bff;
     }
+
     button {
         background-color: #f9f9f9;
     }

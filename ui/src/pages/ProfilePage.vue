@@ -8,14 +8,28 @@ import {Button} from "@/components/ui/button";
 
 const userStore = useUserStore()
 
-const items = ref<Item[]>([])
-const isLoading = ref(false)
+const items = ref<Item[]>([]);
+const isLoading = ref(false);
+const isProfileUpdated = ref(false);
+const avatarImgPath = ref("");
 
 onMounted(async () => {
-    isLoading.value = true
-    await userStore.getUser()
-    items.value = await userStore.getInventoryItems()
-    isLoading.value = false
+    isLoading.value = true;
+    await userStore.getUser();
+    items.value = await userStore.getInventoryItems();
+    
+    import(`../../../files/users/${userStore.user?.username}/avatar.png`).then(value => {
+        avatarImgPath.value = value.default
+        isProfileUpdated.value = false;
+    });
+    
+    if (userStore.userProfile === "changed") {
+        isProfileUpdated.value = true;
+        avatarImgPath.value = "";
+        userStore.userProfile = "notChanged";
+    }
+    
+    isLoading.value = false;
 })
 </script>
 
@@ -32,7 +46,9 @@ onMounted(async () => {
                     </div>
                 </div>
                 <div class="flex" v-else>
-                    <img src="../assets/2d54f86eaf5cbf4df14dee5bd62c8538.jpg"
+                    <img v-if="!isProfileUpdated && userStore.userProfile === ''" :src="avatarImgPath"
+                         class="rounded-full outline-offset-4 outline outline-2 outline-primary h-[8rem] w-[8rem] m-7"/>
+                    <img v-else :src="userStore.userProfile"
                          class="rounded-full outline-offset-4 outline outline-2 outline-primary h-[8rem] w-[8rem] m-7"/>
                     <div class="flex justify-center items-start flex-col">
                         <h2 class="text-5xl font-bold">{{ userStore.user?.username }}</h2>

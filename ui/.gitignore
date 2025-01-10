@@ -12,6 +12,8 @@ dist
 dist-ssr
 *.local
 .env
+assets/games
+assets/games/*
 
 # Editor directories and files
 .vscode/*
