@@ -28,6 +28,7 @@ fun Application.module() {
         allowHost("localhost:5173")
         allowHeader(HttpHeaders.ContentType)
         allowHeader(HttpHeaders.Authorization)
+        allowHeader("Content-Security-Policy")
         allowMethod(HttpMethod.Options)
         allowMethod(HttpMethod.Patch)
         allowMethod(HttpMethod.Put)

@@ -41,6 +41,49 @@
     playerRuntime?: "air" | "flashPlayer";
 }
 
+interface URLLoadOptions {
+    url: string;
+    allowScriptAccess?: boolean;
+    parameters?: null | string | URLSearchParams | Record<string, string>;
+    // autoplay?: AutoPlay;
+    backgroundColor?: null | string;
+    // letterbox?: Letterbox;
+    // unmuteOverlay?: UnmuteOverlay;
+    upgradeToHttps?: boolean;
+    compatibilityRules?: boolean;
+    favorFlash?: boolean;
+    warnOnUnsupportedContent?: boolean;
+    // logLevel?: LogLevel;
+    showSwfDownload?: boolean;
+    // contextMenu?: boolean | ContextMenu;
+    preloader?: boolean;
+    splashScreen?: boolean;
+    // maxExecutionDuration?: Duration;
+    base?: null | string;
+    menu?: boolean;
+    salign?: string;
+    forceAlign?: boolean;
+    quality?: string;
+    scale?: string;
+    forceScale?: boolean;
+    allowFullscreen?: boolean;
+    frameRate?: null | number;
+    // wmode?: WindowMode;
+    playerVersion?: null | number;
+    // preferredRenderer?: null | RenderBackend;
+    publicPath?: null | string;
+    polyfills?: boolean;
+    // openUrlMode?: OpenURLMode;
+    // allowNetworking?: NetworkingAccessMode;
+    // openInNewTab?: null | (swf: URL) => void;
+    // socketProxy?: SocketProxy[];
+    fontSources?: string[];
+    // defaultFonts?: DefaultFonts;
+    credentialAllowList?: string[];
+    // playerRuntime?: PlayerRuntime;
+}
+
+
 export type APIVersions = {
     1: PlayerV1;
 };

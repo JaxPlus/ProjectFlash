@@ -5,23 +5,49 @@ import {AutoForm, Config} from "@/components/ui/auto-form";
 import {z} from "zod";
 import {Button} from "@/components/ui/button";
 import Divider from "@/components/Divider.vue";
-import {changePage} from "@/utility.ts";
-import FlashPopover from "@/components/FlashPopover.vue";
 
-const userStore = useUserStore()
-userStore.getUser()
+const userStore = useUserStore();
+userStore.getUser();
 
-const isAccountShown = ref(true)
-const isStatisticsShown = ref(false)
+const isAccountShown = ref(true);
+const isStatisticsShown = ref(false);
+const img = ref("")
+const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
 
-const schema = z.object({
+const usernameSchema = z.object({
     username: z.string().describe("Here you can change your username!").default(userStore.user?.username),
-})
-const config: Config<any> = {
+});
+const usernameConfig: Config<any> = {
     username: {
         inputProps: {
             placeholder: 'Enter your new username!'
         }
+    }
+};
+
+const profileSchema = z.object({
+    profile: z
+        .any()
+        .refine((files) => files?.length > 0, "Image is required.")
+        .refine(
+            (files: string) => {
+                if (files) {
+                    const type = files.matchAll(/image\/(?<=\/)(.*?)(?=;)/gm).next().value?.at(0) || "";
+                    return ACCEPTED_IMAGE_TYPES.includes(type)
+                }
+
+                return false;
+            },
+            ".jpg, .jpeg, .png and .webp files are accepted."
+        ),
+});
+const profileConfig: Config<any> = {
+    profile: {
+        inputProps: {
+            type: "file"
+        },
+        label: "Here you can change your profile!",
+        component: "file"
     }
 }
 
@@ -38,12 +64,18 @@ function showContent(type: "account" | "statistics") {
     }
 }
 
-function onSubmit(values: z.infer<typeof schema>) {
+function onUsernameSubmit(values: z.infer<typeof usernameSchema>) {
     if (values.username === userStore.user?.username) {
         return;
     }
 
     userStore.editUsername(values.username);
+}
+
+function onProfileSubmit(values: z.infer<typeof profileSchema>) {
+    img.value = values.profile;
+    userStore.editProfile(img.value);
+    userStore.userProfile = img.value;
 }
 
 </script>
@@ -104,9 +136,16 @@ function onSubmit(values: z.infer<typeof schema>) {
                 <div class="m-6">
                     <AutoForm
                         class="flex justify-between"
-                        :schema="schema"
-                        :field-config="config"
-                        @submit="onSubmit">
+                        :schema="usernameSchema"
+                        :field-config="usernameConfig"
+                        @submit="onUsernameSubmit">
+                        <Button class="mt-4 self-end" variant="outline" type="submit">Save</Button>
+                    </AutoForm>
+                </div>
+                <Divider class="self-center"/>
+                <div class="m-6">
+                    <AutoForm :schema="profileSchema" :field-config="profileConfig"
+                              @submit="onProfileSubmit" class="flex justify-between">
                         <Button class="mt-4 self-end" variant="outline" type="submit">Save</Button>
                     </AutoForm>
                 </div>

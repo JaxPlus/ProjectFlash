@@ -1,11 +1,14 @@
 ﻿import {defineStore} from "pinia";
-import {PlayerElement, SourceAPI} from "@/models/RuffleConfig.ts";
+import {PlayerElement} from "@/models/RuffleConfig.ts";
 
 export const useRuffleStore = defineStore('ruffleStore', () => {
-    const ruffle = window.RufflePlayer.newest() as SourceAPI
+    const ruffle = window.RufflePlayer;
     
     function getRufflePlayer(): PlayerElement {
-        return ruffle.createPlayer()
+        ruffle.config = {
+            allowFullscreen: true,
+        }
+        return ruffle.newest().createPlayer()
     }
     
     return {
