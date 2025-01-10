@@ -10,6 +10,7 @@ type themes = "light" | "dark" | "cafe" | "eva" | "unicorn" | string;
 
 export const useUserStore = defineStore('userStore', () => {
     const user = ref<User | null>({})
+    const userProfile = ref("");
     
     async function getUser() {
         await axios.get('http://localhost:8080/user', {
@@ -18,7 +19,7 @@ export const useUserStore = defineStore('userStore', () => {
             }
         }).then((res) => {
             user.value = res.data
-        }).catch(async (err) => {
+        }).catch(async () => {
             // console.log(err)
             
             await retryAction(getUser, () => {
@@ -42,10 +43,11 @@ export const useUserStore = defineStore('userStore', () => {
         }).then((res) => {
             $cookies.set("access-token", res.data.token, import.meta.env.VITE_JWT_ACCESS_TOKEN_EXP, null, null, true)
             return true;
-        }).catch((err) => {
+        }).catch(() => {
             // console.log(err)
             $cookies.remove("refresh-token");
             $cookies.remove("access-token");
+            changePage("/login");
             return false;
         })
     }
@@ -91,6 +93,21 @@ export const useUserStore = defineStore('userStore', () => {
         return items;
     }
     
+    async function editProfile(img: string) {
+        await axios.post('http://localhost:8080/user/profile', {
+            img: img,
+        }, {
+            headers: {
+                Authorization: `Bearer ${$cookies.get("access-token")}`
+            }
+        }).then(res => {
+            console.log(res.data)
+        }).catch(async (err) => {
+            console.log(err)
+            // await retryAction(editProfile)
+        })
+    }
+    
     function isUserLoggedIn(): boolean {
         return user.value !== null;
     }
@@ -120,11 +137,13 @@ export const useUserStore = defineStore('userStore', () => {
     }
     
     return {
-        user, 
+        user,
+        userProfile,
         getUser,
         refreshToken,
         editUsername,
         getInventoryItems,
+        editProfile,
         isUserLoggedIn,
         logOut,
         mode,

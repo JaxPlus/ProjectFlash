@@ -8,25 +8,25 @@ const player = ruffleStore.getRufflePlayer();
 
 const gameStore = useGameStore();
 
-
 const id = localStorage.getItem('gameId');
 
-if(id != null) {
-  gameStore.getGameById(id);
+if (id != null) {
+    gameStore.getGameById(id);
 }
 
 setTimeout(() => {
-  document.getElementById("container")?.appendChild(player)
-  player.load("/games/"+gameStore?.game?.gamePath);
+    document.getElementById("container")?.appendChild(player)
+    
+    player.load("../src/assets/games/" + gameStore?.game?.gamePath);
 }, 1000)
 
 </script>
 
 
 <template>
-  <div id="container"></div>
-  <p>{{gameStore?.game?.title}}</p>
-  <p>{{gameStore?.game?.description}}</p>
+    <div id="container"></div>
+    <p>{{ gameStore?.game?.title }}</p>
+    <p>{{ gameStore?.game?.description }}</p>
 </template>
 
 <style scoped>

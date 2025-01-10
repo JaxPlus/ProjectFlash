@@ -7,7 +7,6 @@ const userStore = useUserStore()
 <template>
     <Navbar/>
     <main>
-<!--        <div id="container"></div>-->
         <RouterView/>
     </main>
 </template>
