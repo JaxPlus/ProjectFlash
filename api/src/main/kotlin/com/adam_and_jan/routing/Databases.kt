@@ -57,6 +57,28 @@ fun Application.configureDatabases(
             }
         }
 
+        get("/tags") {
+            try {
+                val tags = gameRepository.getAllTags()
+                call.respond(HttpStatusCode.OK, tags)
+            }
+            catch (e: Exception) {
+                println("Error: ${e.message}")
+                call.respond(HttpStatusCode.NotFound)
+            }
+        }
+
+        get("/games/tag/{id}") {
+            val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
+            try {
+                val games = gameRepository.getAllGamesByTag(id)
+
+                call.respond(HttpStatusCode.OK, games)
+            } catch (e: Exception) {
+                call.respond(HttpStatusCode.NotFound, e.message ?: "")
+            }
+        }
+
         authenticate {
             get("/users") {
                 try {
