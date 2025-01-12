@@ -23,7 +23,7 @@ setTimeout(() => {
     document.getElementById("container")?.appendChild(player)
     
     player.load("../src/assets/games/" + gameStore?.game?.gamePath);
-    console.log(player.loadedConfig)
+    // console.log(player.loadedConfig)
     isLoading.value = false;
 }, 1000)
 
@@ -57,7 +57,6 @@ setTimeout(() => {
                     <GameCard title="TEST" :game-id="4"/>
                     <GameCard title="TEST" :game-id="5"/>
                 </div>
-
             </div>
         </div>
     </div>
