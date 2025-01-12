@@ -1,6 +1,6 @@
 ﻿<script setup lang="ts">
 
-import {changePage} from "@/utility.ts";
+import router from "@/router.ts";
 
 const props = defineProps<{
     title: string
@@ -8,8 +8,7 @@ const props = defineProps<{
 }>()
 
 function goToGame() {
-  localStorage.setItem('gameId', props.gameId.toString());
-  changePage('/game');
+    router.push({name: "GamePage", params: {gameId: props.gameId}});
 }
 
 </script>
