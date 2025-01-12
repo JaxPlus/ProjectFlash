@@ -17,7 +17,7 @@ class GameRepository(
         private const val SELECT_GAME_BY_ID = """SELECT * FROM games WHERE id = ?"""
         private const val SELECT_ALL_GAMES = """SELECT * FROM games"""
 
-        private const val SELECT_ALL_TAGS = """SELECT * FROM TAGS"""
+        private const val SELECT_ALL_TAGS = """SELECT * FROM tags"""
         private const val SELECT_GAMES_BY_TAG = """SELECT * FROM games where id IN(SELECT game_id FROM games_tags WHERE tag_id = ?)"""
     }
 
@@ -89,8 +89,6 @@ class GameRepository(
         return@withContext games
     }
 
-
-
     private fun getGame(resultSet: ResultSet): Game {
         val id = resultSet.getInt("id")
         val title = resultSet.getString("title")
@@ -104,7 +102,7 @@ class GameRepository(
 
     private fun getTag(resultSet: ResultSet): Tag {
         val id = resultSet.getInt("id")
-        val tagName = resultSet.getString("tagName")
+        val tagName = resultSet.getString("tag_name")
 
         return Tag(id, tagName)
     }

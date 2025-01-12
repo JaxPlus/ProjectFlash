@@ -7,6 +7,7 @@ export const useRuffleStore = defineStore('ruffleStore', () => {
     function getRufflePlayer(): PlayerElement {
         ruffle.config = {
             allowFullscreen: true,
+            wmode: "opaque",
         }
         return ruffle.newest().createPlayer()
     }
