@@ -3,6 +3,7 @@ import {useRuffleStore} from "@/stores/RuffleStore.ts";
 import {useGameStore} from "@/stores/GameStore.ts";
 import {ref} from "vue";
 import {Skeleton} from "@/components/ui/skeleton";
+import GameCard from "@/components/GameCard.vue";
 
 const ruffleStore = useRuffleStore();
 const player = ruffleStore.getRufflePlayer();
@@ -33,11 +34,22 @@ setTimeout(() => {
     <div class="w-full h-full">
         <Skeleton :class="`w-[46rem] h-[35rem] ${isLoading ? 'block' : 'hidden'}`" />
         <div :class="` ${isLoading ? 'hidden' : 'block'}`">
-            <div class="w-[46rem] h-[35rem]" id="container"></div>
-            <div class="bg-secondary border border-primary flex flex-col items-center min-h-28 text-start rounded-2xl">
+            <div class="w-full flex flex-col items-center">
+               <div class="w-[46rem] h-[35rem] m-8" id="container"></div>
+            </div>
+          <div class="w-full flex flex-row p-10">
+            <div class="bg-secondary border border-primary flex flex-col items-center min-h-64 text-start rounded-2xl">
                 <p>{{ gameStore?.game?.title }}</p>
                 <p>{{ gameStore?.game?.description }}</p>
             </div>
+            <div class="bg-secondary border border-primary flex flex-col items-center w-2/5 min-w-min min-h-64 ml-10 rounded-2xl">
+                <GameCard title="TEST" game-id=id />
+                <GameCard title="TEST" game-id=id />
+                <GameCard title="TEST" game-id=id />
+                <GameCard title="TEST" game-id=id />
+                <GameCard title="TEST" game-id=id />
+            </div>
+          </div>
         </div>
     </div>
 </template>
