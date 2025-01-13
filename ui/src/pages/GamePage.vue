@@ -20,13 +20,13 @@ gameStore.getGameById(id.toString());
 watch(
     () => route.params.gameId,
     (newId) => {
-      gameStore.getGameById(newId.toString());
+        gameStore.getGameById(newId.toString());
 
-      setTimeout(() => {
-        player.load("../src/assets/games/" + gameStore?.game?.gamePath);
-      }, 1000)
+        setTimeout(() => {
+          player.load("../src/assets/games/" + gameStore?.game?.gamePath);
+        }, 1000)
 
-      window.scrollTo(0,0);
+        window.scrollTo(0,0);
     }
 )
 

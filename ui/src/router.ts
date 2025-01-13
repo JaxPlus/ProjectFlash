@@ -7,6 +7,7 @@ import RegisterPage from "@/pages/RegisterPage.vue";
 import SettingsPage from "@/pages/SettingsPage.vue";
 import ShopPage from "@/pages/ShopPage.vue";
 import GamePage from "@/pages/GamePage.vue";
+import TagPage from "@/pages/TagPage.vue";
 
 const routes = [
     { path: '/', component: MainPage },
@@ -16,6 +17,7 @@ const routes = [
     { path: '/settings', component: SettingsPage },
     { path: '/shop', component: ShopPage },
     { path: '/game/:gameId', component: GamePage, name: 'GamePage' },
+    { path: '/tag/:tagId/:tagName', component: TagPage, name: 'TagPage' },
 ]
 
 const router = createRouter({
