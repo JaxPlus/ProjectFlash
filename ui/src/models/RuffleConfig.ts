@@ -41,7 +41,50 @@
     playerRuntime?: "air" | "flashPlayer";
 }
 
-interface URLLoadOptions {
+interface DataLoadOptions {
+    data: ArrayLike<number> | ArrayBufferLike;
+    swfFileName?: string;
+    allowScriptAccess?: boolean;
+    parameters?: null | string | URLSearchParams | Record<string, string>;
+    // autoplay?: AutoPlay;
+    backgroundColor?: null | string;
+    // letterbox?: Letterbox;
+    // unmuteOverlay?: UnmuteOverlay;
+    upgradeToHttps?: boolean;
+    compatibilityRules?: boolean;
+    favorFlash?: boolean;
+    warnOnUnsupportedContent?: boolean;
+    // logLevel?: LogLevel;
+    showSwfDownload?: boolean;
+    // contextMenu?: boolean | ContextMenu;
+    preloader?: boolean;
+    splashScreen?: boolean;
+    // maxExecutionDuration?: Duration;
+    base?: null | string;
+    menu?: boolean;
+    salign?: string;
+    forceAlign?: boolean;
+    quality?: string;
+    scale?: string;
+    forceScale?: boolean;
+    allowFullscreen?: boolean;
+    frameRate?: null | number;
+    // wmode?: WindowMode;
+    playerVersion?: null | number;
+    // preferredRenderer?: null | RenderBackend;
+    publicPath?: null | string;
+    polyfills?: boolean;
+    // openUrlMode?: OpenURLMode;
+    // allowNetworking?: NetworkingAccessMode;
+    // openInNewTab?: null | (swf: URL) => void;
+    // socketProxy?: SocketProxy[];
+    fontSources?: string[];
+    // defaultFonts?: DefaultFonts;
+    credentialAllowList?: string[];
+    // playerRuntime?: PlayerRuntime;
+}
+
+export interface URLLoadOptions {
     url: string;
     allowScriptAccess?: boolean;
     parameters?: null | string | URLSearchParams | Record<string, string>;
@@ -100,17 +143,18 @@ export interface PlayerElement extends Node {
     play(): void;
     get isPlaying(): boolean;
     get volume(): number;
-    set volume(value: number): void;
+    set volume(value: number);
     get fullscreenEnabled(): boolean;
     get isFullscreen(): boolean;
     setFullscreen(isFull: boolean): void;
     enterFullscreen(): void;
     exitFullscreen(): void;
     pause(): void;
-    set traceObserver(observer: ((message: string) => void) | null): void;
+    set traceObserver(observer: ((message: string) => void) | null);
     downloadSwf(): Promise<void>;
     displayMessage(message: string): void;
     PercentLoaded(): number;
+    style: CSSStyleDeclaration;
 }
 
 export interface SourceAPI {

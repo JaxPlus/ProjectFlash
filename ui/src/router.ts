@@ -15,7 +15,7 @@ const routes = [
     { path: '/profile', component: ProfilePage },
     { path: '/settings', component: SettingsPage },
     { path: '/shop', component: ShopPage },
-    { path: '/game', component: GamePage },
+    { path: '/game/:gameId', component: GamePage, name: 'GamePage' },
 ]
 
 const router = createRouter({

@@ -6,7 +6,7 @@ import axios from "axios";
 import {changePage, retryAction} from "@/utility.ts";
 import Item from "@/models/Item.ts";
 
-type themes = "light" | "dark" | "cafe" | "eva" | "unicorn" | string;
+type themes = "light" | "dark" | "cafe" | "eva" | "unicorn" | "violet" | "pink" | string;
 
 export const useUserStore = defineStore('userStore', () => {
     const user = ref<User | null>({})
@@ -129,6 +129,8 @@ export const useUserStore = defineStore('userStore', () => {
             cafe: 'cafe',
             unicorn: 'unicorn',
             eva: 'eva',
+            violet: 'violet',
+            pink: 'pink',
         }
     })
     

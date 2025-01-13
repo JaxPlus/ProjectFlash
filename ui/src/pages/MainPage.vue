@@ -2,24 +2,28 @@
 import GameCardGroup from "@/components/GameCardGroup.vue";
 import {useGameStore} from "@/stores/GameStore.ts";
 import {onMounted, ref} from "vue";
+import Game from "@/models/Game.ts";
 
 const gameStore = useGameStore();
 
-const allGameNames: string[] = [];
-const allGameIds: number[] = [];
-
-const isLoading = ref(false)
+const tagsGames = ref<{ tagName: string, games: Game[] }[]>([]);
+const isLoading = ref(false);
 
 onMounted(async () => {
-  isLoading.value = true
+    isLoading.value = true;
 
-  let allGames = await gameStore.getAllGames()
+    let allTags = await gameStore.getAllTags();
 
-  allGames.forEach((game) => {
-    allGameNames.push(game.title);
-    allGameIds.push(game.id);
-  })
-  isLoading.value = false
+    for (const tag of allTags) {
+        let gamesByTag = await gameStore.getAllGamesByTag(tag.id.toString());
+
+        tagsGames.value.push({
+            tagName: tag.tagName,
+            games: gamesByTag,
+        });
+    }
+
+    isLoading.value = false;
 })
 
 </script>
@@ -31,7 +35,7 @@ onMounted(async () => {
             One Site. Million Games.
         </p>
     </div>
-    <GameCardGroup v-if="!isLoading" group-title="Recommended" :game-cards="allGameNames" :game-ids="allGameIds" />
+    <GameCardGroup v-for="tag in tagsGames" v-if="!isLoading" :group-title="tag.tagName" :game-cards="tag.games" />
 </template>
 
 <style scoped>
