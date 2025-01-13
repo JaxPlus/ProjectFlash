@@ -5,12 +5,14 @@ import {AutoForm, Config} from "@/components/ui/auto-form";
 import {z} from "zod";
 import {Button} from "@/components/ui/button";
 import Divider from "@/components/Divider.vue";
+import FlashPopover from "@/components/FlashPopover.vue";
 
 const userStore = useUserStore();
 userStore.getUser();
 
 const isAccountShown = ref(true);
 const isStatisticsShown = ref(false);
+const isSuccessShown = ref(false);
 const img = ref("")
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
 
@@ -76,6 +78,11 @@ function onProfileSubmit(values: z.infer<typeof profileSchema>) {
     img.value = values.profile;
     userStore.editProfile(img.value);
     userStore.userProfile = img.value;
+    isSuccessShown.value = true;
+    
+    setTimeout(() => {
+        isStatisticsShown.value = false;
+    }, 4000);
 }
 
 </script>
@@ -156,6 +163,7 @@ function onProfileSubmit(values: z.infer<typeof profileSchema>) {
             </div>
         </div>
     </div>
+    <FlashPopover v-if="isSuccessShown" message="Successfully changed profile!" variant="success" />
 </template>
 
 <style scoped>

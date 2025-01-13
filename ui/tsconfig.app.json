@@ -25,6 +25,7 @@
       "@/*": ["./src/*"],
       "@files/*": ["../files/*"], 
       "@files": ["../files"],
+      "@assets/*": ["./src/assets/*"],
     }
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"]
