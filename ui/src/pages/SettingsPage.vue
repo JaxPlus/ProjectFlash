@@ -115,16 +115,16 @@ function onProfileSubmit(values: z.infer<typeof profileSchema>) {
                 </svg>
                 <span class="mr-auto">Account</span>
             </p>
-            <Divider class="self-center"/>
-            <p class="p-2 cursor-pointer flex items-center" @click="showContent('statistics')">
-                <svg xmlns="http://www.w3.org/2000/svg"
-                     viewBox="0 0 24 24">
-                    <path
-                        stroke-width="0.3"
-                        d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2m0 16H5V5h14zM9 17H7v-5h2zm4 0h-2V7h2zm4 0h-2v-7h2z"/>
-                </svg>
-                <span class="mr-auto">Statistics</span>
-            </p>
+<!--            <Divider class="self-center"/>-->
+<!--            <p class="p-2 cursor-pointer flex items-center" @click="showContent('statistics')">-->
+<!--                <svg xmlns="http://www.w3.org/2000/svg"-->
+<!--                     viewBox="0 0 24 24">-->
+<!--                    <path-->
+<!--                        stroke-width="0.3"-->
+<!--                        d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2m0 16H5V5h14zM9 17H7v-5h2zm4 0h-2V7h2zm4 0h-2v-7h2z"/>-->
+<!--                </svg>-->
+<!--                <span class="mr-auto">Statistics</span>-->
+<!--            </p>-->
             <Divider class="self-center"/>
             <p class="p-2 cursor-pointer flex items-center" @click="userStore.logOut()">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
