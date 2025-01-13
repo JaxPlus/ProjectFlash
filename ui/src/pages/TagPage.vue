@@ -18,6 +18,7 @@ watch(
     () => route.params.tagId,
     async (newId) => {
       id = route.params.tagId;
+      name = route.params.tagName;
       allGames.value = await gameStore.getAllGamesByTag(newId.toString());
     }
 )
