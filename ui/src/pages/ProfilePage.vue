@@ -81,7 +81,7 @@ onMounted(async () => {
                 </Button>
             </div>
             <div class="bg-secondary border border-primary min-h-[calc(100vh+4rem)] mt-4 rounded-2xl">
-                <h3 class="text-4xl text-start pt-4 mx-4 mb-4">Ostatnio grane gry</h3>
+                <h3 class="text-4xl text-start pt-4 mx-4 mb-4">Recently played games</h3>
                 <div class="grid grid-cols-2 justify-items-center">
                     <div v-for="() in 10" class="w-3/4 h-[8rem] bg-primary rounded-xl shadow-lg m-2">
                     </div>

@@ -42,7 +42,7 @@ class UserRepository(
         statement.setString(1, user.username)
         statement.setString(2, user.email)
         statement.setString(3, user.hashedPassword())
-        statement.setInt(4, 0)
+        statement.setInt(4, 100000)
         statement.setInt(5, 0)
         statement.setArray(6, connection.createArrayOf("INTEGER", listOf(1, 2).toTypedArray()))
 
