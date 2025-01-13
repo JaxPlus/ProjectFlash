@@ -57,17 +57,17 @@ setTimeout(() => {
                 <div
                     class="bg-secondary border border-primary flex flex-col min-h-64 min-w-96 w-3/5 text-start rounded-2xl">
                     <p class="font-medium text-4xl px-12 pt-12">{{ gameStore?.game?.title }}</p>
-                    <p class="font-medium text-base px-12 pt-3">Added by: </p>
+                    <p class="font-medium text-base px-12 pt-3">Added by: Admin</p>
                     <p class=" text-lg px-12 py-8">{{ gameStore?.game?.description }}</p>
                 </div>
 
                 <div
                     class="bg-secondary border border-primary flex flex-col items-center p-5 min-w-min min-h-64 ml-10 rounded-2xl gap-6">
-                    <GameCard title="TEST" :game-id="1"/>
-                    <GameCard title="TEST" :game-id="2"/>
-                    <GameCard title="sadfasdf" :game-id="3"/>
-                    <GameCard title="TEST" :game-id="4"/>
-                    <GameCard title="TEST" :game-id="5"/>
+                    <GameCard title="Strike Force Heroes 2" :game-id="1"/>
+                    <GameCard title="Papa's Pizzeria" :game-id="2"/>
+                    <GameCard title="Mighty Knight" :game-id="3"/>
+                    <GameCard title="Kingdom Rush" :game-id="4"/>
+                    <GameCard title="War Of Ages" :game-id="5"/>
                 </div>
             </div>
         </div>
