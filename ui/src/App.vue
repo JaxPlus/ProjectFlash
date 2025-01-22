@@ -2,6 +2,11 @@
 import Navbar from "./components/Navbar.vue";
 import {useUserStore} from "@/stores/UserStore.ts";
 const userStore = useUserStore()
+
+if (userStore.user?.id === undefined && !$cookies.isKey("refresh-token")) {
+    userStore.switchTheme("light");
+}
+
 </script>
 
 <template>

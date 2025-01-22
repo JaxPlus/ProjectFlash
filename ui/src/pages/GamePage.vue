@@ -35,7 +35,9 @@ setTimeout(() => {
     player.style.width = "100%";
     document.getElementById("container")?.appendChild(player)
     
-    player.load("../src/assets/games/" + gameStore?.game?.gamePath);
+    let gamePath = "../src/assets/games/" + gameStore?.game?.gamePath.substring(0, gameStore?.game?.gamePath.length - 4) + "/" + gameStore?.game?.gamePath
+    
+    player.load(gamePath);
     isLoading.value = false;
 }, 1000)
 

@@ -63,6 +63,7 @@ function buyItem() {
 <template>
     <Dialog>
         <DialogTrigger
+            v-if="props.item.type !== 'box'"
             class="h-[8rem] w-auto m-2 grid grid-cols-3 rounded-2xl outline-2 outline outline-primary outline-offset-2"
             :class="props.class">
             <div
@@ -75,6 +76,12 @@ function buyItem() {
             </div>
             <div
                 :class="`h-full w-full ${props.item.name} ${props.item.name === 'default' ? defaultTheme.text : 'bg-text-color'} rounded-r-2xl`"/>
+        </DialogTrigger>
+        <DialogTrigger
+            v-else
+            class="h-[8rem] w-auto m-2 rounded-2xl outline-2 outline outline-primary outline-offset-2"
+            :class="props.class">
+            <div class="h-full w-full bg-primary/70 rounded-2xl"/>
         </DialogTrigger>
 
         <DialogContent>
@@ -91,10 +98,10 @@ function buyItem() {
                 </p>
                 <Button @click="buyItem()"
                         :disabled="isDisabled">
-                    Buy this theme
+                    {{ props.item.type !== "box" ? "Buy this theme" : "Buy this box" }}
                 </Button>
             </DialogFooter>
         </DialogContent>
     </Dialog>
-    <FlashPopover v-if="isPopoverShown" message="Successfully bought an item!" variant="success" :duration="6000" />
+    <FlashPopover v-if="isPopoverShown" message="Successfully bought an item!" variant="success" :duration="6000"/>
 </template>

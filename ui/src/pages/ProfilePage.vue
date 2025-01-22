@@ -19,7 +19,6 @@ onMounted(async () => {
     items.value = await userStore.getInventoryItems();
 
     await import(`../../../files/users/${userStore.user?.username}/avatar.png`).then(value => {
-        console.log(value);
         avatarImgPath.value = value.default;
     }).catch(error => {
         console.log(`PROFILE ERROR: ${error}`);

@@ -8,19 +8,19 @@ import {Carousel, CarouselContent, CarouselItem} from "@/components/ui/carousel"
 import Autoplay from "embla-carousel-autoplay";
 import {useUserStore} from "@/stores/UserStore.ts";
 
-const userStore = useUserStore()
-userStore.getUser()
+const userStore = useUserStore();
+userStore.getUser();
 
-const lightThemes = ref<Item[]>([])
-const darkThemes = ref<Item[]>([])
-const boxes = ref<Item[]>([])
-const featured = ref<Item[]>([])
+const lightThemes = ref<Item[]>([]);
+const darkThemes = ref<Item[]>([]);
+const boxes = ref<Item[]>([]);
+const featured = ref<Item[]>([]);
 
 const plugin = Autoplay({
     delay: 10000,
     stopOnMouseEnter: true,
     stopOnInteraction: false,
-})
+});
 
 onMounted(async () => {
     const response = await axios.get("http://127.0.0.1:8080/shop");
@@ -39,9 +39,18 @@ onMounted(async () => {
         }
     }
 
-    featured.value.push(response.data[1])
-    featured.value.push(response.data[3])
-    featured.value.push(response.data[2])
+    featured.value.push(response.data[1]);
+    featured.value.push(response.data[3]);
+    featured.value.push(response.data[2]);
+    
+    // boxes.value.push({
+    //     id: 100,
+    //     name: "s_flash_box",
+    //     displayName: "Super Flash Box",
+    //     description: "Flash Box",
+    //     price: 5000,
+    //     type: "box",
+    // });
 })
 </script>
 
@@ -67,14 +76,17 @@ onMounted(async () => {
             </div>
 
             <ShopCategory class="pt-4">Light themes</ShopCategory>
-            <div class="w-full grid px-2 grid-cols-3 md:grid-cols-5">
+            <div class="w-full grid px-4 grid-cols-3 md:grid-cols-5">
                 <ShopItem v-for="item in lightThemes" :item="item"/>
             </div>
             <ShopCategory>Dark themes</ShopCategory>
-            <div class="w-full grid px-2 grid-cols-3 md:grid-cols-5">
+            <div class="w-full grid px-4 grid-cols-3 md:grid-cols-5">
                 <ShopItem v-for="item in darkThemes" :item="item"/>
             </div>
             <ShopCategory>Boxes</ShopCategory>
+            <div class="w-full grid px-4 mb-4 grid-cols-3 md:grid-cols-5">
+                <ShopItem v-for="item in boxes" :item="item"/>
+            </div>
         </div>
     </div>
 </template>
