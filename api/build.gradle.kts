@@ -44,4 +44,11 @@ dependencies {
     //JWT
     implementation("io.ktor:ktor-server-auth:2.3.12")
     implementation("io.ktor:ktor-server-auth-jwt:2.3.12")
+
+    /**
+     * @todo Wywalić jak już się skończę bawić
+     */
+    implementation("io.ktor:ktor-client-core:$ktor_version")
+    implementation("io.ktor:ktor-client-cio:$ktor_version")
+    implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
 }

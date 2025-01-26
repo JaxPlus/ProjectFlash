@@ -15,7 +15,7 @@ const props = defineProps<{
         <ScrollArea>
             <div class="flex pb-4 space-x-4 w-max">
                 <div v-for="gameCard in gameCards">
-                    <GameCard :title="gameCard.title" :game-id="gameCard.id" />
+                    <GameCard :title="gameCard.title" :game-path="gameCard.gamePath.substring(0, gameCard.gamePath.length - 4)" :game-id="gameCard.id" />
                 </div>
             </div>
         </ScrollArea>
