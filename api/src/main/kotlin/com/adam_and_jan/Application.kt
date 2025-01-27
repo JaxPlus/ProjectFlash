@@ -2,7 +2,6 @@ package com.adam_and_jan
 
 import com.adam_and_jan.routing.configureDatabases
 import com.adam_and_jan.routing.configureRouting
-import com.adam_and_jan.routing.connectToPostgres
 import com.adam_and_jan.plugins.*
 import com.adam_and_jan.plugins.services.JwtService
 import com.adam_and_jan.plugins.services.ShopService
@@ -16,13 +15,12 @@ import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import io.ktor.server.plugins.cors.routing.CORS
-import java.sql.Connection
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.Postgrest
 
 
 fun main(args: Array<String>) {
-    embeddedServer(Netty, commandLineEnvironment(args))
+    embeddedServer(Netty, port = 8080, host = "0.0.0.0", module = Application::module)
         .start(wait = true)
 }
 
