@@ -17,6 +17,9 @@ import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import io.ktor.server.plugins.cors.routing.CORS
 import java.sql.Connection
+import io.github.jan.supabase.createSupabaseClient
+import io.github.jan.supabase.postgrest.Postgrest
+
 
 fun main(args: Array<String>) {
     embeddedServer(Netty, commandLineEnvironment(args))
@@ -35,10 +38,17 @@ fun Application.module() {
         allowMethod(HttpMethod.Delete)
     }
 
-    val dbconnection: Connection = connectToPostgres(embedded = true)
-    val userRepository = UserRepository(dbconnection)
+    val client = createSupabaseClient(
+        supabaseUrl = environment.config.property("ktor.supabase.url").getString(),
+        supabaseKey = environment.config.property("ktor.supabase.key").getString()
+    ) {
+        install(Postgrest)
+    }
+
+    //val dbconnection: Connection = connectToPostgres(embedded = true)
+    val userRepository = UserRepository(client)
     val refreshTokenRepository = RefreshTokenRepository()
-    val shopRepository = ShopRepository(dbconnection)
+    val shopRepository = ShopRepository(client)
 
     val jwtService = JwtService(this)
     val userService = UserService(userRepository, jwtService, refreshTokenRepository)
@@ -47,6 +57,6 @@ fun Application.module() {
 
     configureSecurity(jwtService)
     configureRouting(userService)
-    configureDatabases(shopService)
+    configureDatabases(shopService, client)
     configureSerialization()
 }
