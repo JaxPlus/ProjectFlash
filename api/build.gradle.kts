@@ -55,5 +55,5 @@ dependencies {
     implementation("io.github.jan-tennert.supabase:postgrest-kt")
     implementation("io.github.jan-tennert.supabase:realtime-kt")
 
-    implementation("io.ktor:ktor-client-[Java]:$ktor_version")
+    implementation("io.ktor:ktor-client-java:$ktor_version")
 }
