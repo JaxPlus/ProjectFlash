@@ -44,14 +44,14 @@ const defaultTheme = ref({
                     <div v-if="isThemeNameShown" :class="`h-full w-full absolute flex justify-center items-center ${props.item.name} ${props.item.name === 'default' ? 'bg-[#29bcbc]/75' : 'bg-primary/75'} rounded-2xl`">
                         <h2
                             :class="`text-xl w-full ${props.item.name} ${props.item.name == 'default' ? 'text-[#39393c]' : 'text-text-color'}`">
-                            {{ props.item.displayName }}</h2>
+                            {{ props.item.display_name }}</h2>
                     </div>
                 </Transition>
             </DialogTrigger>
 
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>{{ props.item.displayName }}</DialogTitle>
+                    <DialogTitle>{{ props.item.display_name }}</DialogTitle>
                     <DialogDescription>
                         {{ props.item.description }}
                     </DialogDescription>

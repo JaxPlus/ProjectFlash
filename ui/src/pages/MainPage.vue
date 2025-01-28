@@ -18,7 +18,7 @@ onMounted(async () => {
         let gamesByTag = await gameStore.getAllGamesByTag(tag.id.toString());
 
         tagsGames.value.push({
-            tagName: tag.tagName,
+            tagName: tag.tag_name,
             games: gamesByTag,
         });
     }

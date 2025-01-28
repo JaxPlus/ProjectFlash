@@ -30,11 +30,11 @@ class ShopRepository(
 //        return@withContext items
 //    }
 
-    suspend fun getAllShopItems(): List<ShopItem> {
+    suspend fun getAllShopItems(): List<ShopItem> = withContext(Dispatchers.IO) {
         val query = client.postgrest["items"]
             .select()
 
-        return query.decodeList<ShopItem>()
+        return@withContext query.decodeList<ShopItem>()
     }
 
 //    suspend fun getShopItem(itemId: Int): ShopItem = withContext(Dispatchers.IO) {
@@ -52,7 +52,7 @@ class ShopRepository(
 //        }
 //    }
 
-    suspend fun getShopItem(itemId: Int): ShopItem {
+    suspend fun getShopItem(itemId: Int): ShopItem = withContext(Dispatchers.IO) {
         val query = client.postgrest["items"]
             .select() {
                 filter {
@@ -60,7 +60,7 @@ class ShopRepository(
                 }
             }
 
-        return query.decodeSingle<ShopItem>()
+        return@withContext query.decodeSingle<ShopItem>()
     }
 
 //    private fun getItem(resultSet: ResultSet): ShopItem {

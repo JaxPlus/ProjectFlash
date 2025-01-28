@@ -7,9 +7,10 @@ val ktor_version: String by project
 val supabase_version: String by project
 
 plugins {
-    kotlin("jvm") version "2.0.20"
-    id("io.ktor.plugin") version "2.3.12"
-    id("org.jetbrains.kotlin.plugin.serialization") version "2.0.20"
+    kotlin("jvm") version "2.1.10"
+    id("io.ktor.plugin") version "3.0.3"
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.1.10"
+    //kotlin("plugin.serialization") version "2.1.0"
 }
 
 group = "com.adam_and_jan"
@@ -43,17 +44,17 @@ dependencies {
     implementation("org.mindrot:jbcrypt:0.4")
 
     //JWT
-    implementation("io.ktor:ktor-server-auth:2.3.12")
-    implementation("io.ktor:ktor-server-auth-jwt:2.3.12")
+    implementation("io.ktor:ktor-server-auth:3.0.3")
+    implementation("io.ktor:ktor-server-auth-jwt:3.0.3")
 
     //Supabase
     implementation("io.github.jan-tennert.supabase:postgrest-kt:3.0.3")
     implementation("io.ktor:ktor-client-cio:$ktor_version")
 
 
-    implementation(platform("io.github.jan-tennert.supabase:bom:3.0.3"))
-    implementation("io.github.jan-tennert.supabase:postgrest-kt")
-    implementation("io.github.jan-tennert.supabase:realtime-kt")
-
-    implementation("io.ktor:ktor-client-java:$ktor_version")
+//    implementation(platform("io.github.jan-tennert.supabase:bom:3.0.3"))
+//    implementation("io.github.jan-tennert.supabase:postgrest-kt")
+//    implementation("io.github.jan-tennert.supabase:realtime-kt")
+//
+//    implementation("io.ktor:ktor-client-java:$ktor_version")
 }

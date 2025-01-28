@@ -79,7 +79,7 @@ class UserRepository(
 //
 //    }
 
-    suspend fun create(userDto: UserCreateDto): Int {
+    suspend fun create(userDto: UserCreateDto): Int = withContext(Dispatchers.IO) {
         val user = UserInsert(userDto.username, userDto.email, userDto.password, 10000, 0, listOf())
 
         val userInsert = client.postgrest["users"]
@@ -111,7 +111,7 @@ class UserRepository(
 
         if(!userInsert.id.toString().isEmpty()) {
             Path("../files/users/${user.username}").createDirectory()
-            return userInsert.id
+            return@withContext userInsert.id
         } else {
             throw Exception("Unable to retrieve the id of the newly created user.")
         }
@@ -131,7 +131,7 @@ class UserRepository(
 //        }
 //    }
 
-    suspend fun findUserByEmail(email: String): UserDto {
+    suspend fun findUserByEmail(email: String): UserDto = withContext(Dispatchers.IO) {
         val query = client.postgrest["users"]
             .select() {
                 filter {
@@ -139,7 +139,7 @@ class UserRepository(
                 }
             }
         val user = query.decodeSingle<User>()
-        return UserMapper.toDto(user)
+        return@withContext UserMapper.toDto(user)
     }
 
 //    suspend fun getUserByEmail(email: String): User = withContext(Dispatchers.IO) {
@@ -156,7 +156,7 @@ class UserRepository(
 //        }
 //    }
 
-    suspend fun getUserByEmail(email: String): User {
+    suspend fun getUserByEmail(email: String): User = withContext(Dispatchers.IO) {
         val query = client.postgrest["users"]
             .select() {
                 filter {
@@ -164,7 +164,7 @@ class UserRepository(
                 }
             }
 
-        return query.decodeSingle<User>()
+        return@withContext query.decodeSingle<User>()
     }
 
 //    suspend fun getAllUsers(): List<User> = withContext(Dispatchers.IO) {
@@ -183,11 +183,11 @@ class UserRepository(
 //        return@withContext users
 //    }
 
-    suspend fun getAllUsers(): List<User> {
+    suspend fun getAllUsers(): List<User> = withContext(Dispatchers.IO) {
         val query = client.postgrest["users"]
             .select()
 
-        return query.decodeList<User>()
+        return@withContext query.decodeList<User>()
     }
 
 //    suspend fun getUserById(id: Int): UserDto = withContext(Dispatchers.IO) {
@@ -204,7 +204,7 @@ class UserRepository(
 //        }
 //    }
 
-    suspend fun getUserById(id: Int): UserDto {
+    suspend fun getUserById(id: Int): UserDto = withContext(Dispatchers.IO) {
         val query = client.postgrest["users"]
             .select() {
                 filter {
@@ -213,7 +213,7 @@ class UserRepository(
             }
 
         val user = query.decodeSingle<User>()
-        return UserMapper.toDto(user)
+        return@withContext UserMapper.toDto(user)
     }
 
 //    suspend fun getLoginUser(email: String, password: String): Boolean = withContext(Dispatchers.IO) {
@@ -234,7 +234,7 @@ class UserRepository(
 //        }
 //    }
 
-    suspend fun getLoginUser(email: String, password: String): Boolean {
+    suspend fun getLoginUser(email: String, password: String): Boolean = withContext(Dispatchers.IO) {
         val query = client.postgrest["users"]
             .select() {
                 filter {
@@ -246,7 +246,7 @@ class UserRepository(
         val passFromDB = result.email
         val checkPw = BCrypt.checkpw(password, passFromDB)
 
-        return checkPw
+        return@withContext checkPw
     }
 
 //    suspend fun setUsername(username: String, email: String): Boolean = withContext(Dispatchers.IO) {
@@ -266,7 +266,7 @@ class UserRepository(
 //        }
 //    }
 
-    suspend fun setUsername(username: String, email: String): Boolean {
+    suspend fun setUsername(username: String, email: String): Boolean = withContext(Dispatchers.IO) {
         checkUser(email)
 
         client.postgrest["users"]
@@ -279,7 +279,7 @@ class UserRepository(
                 }
             }
 
-        return true
+        return@withContext true
     }
 
 //    suspend fun setUserMoney(id: Int, money: Int): Boolean = withContext(Dispatchers.IO) {
@@ -297,7 +297,7 @@ class UserRepository(
 //        }
 //    }
 
-    suspend fun setUserMoney(id: Int, money: Int): Boolean {
+    suspend fun setUserMoney(id: Int, money: Int): Boolean = withContext(Dispatchers.IO) {
         client.postgrest["users"]
             .update({
                 set("money", money)
@@ -308,7 +308,7 @@ class UserRepository(
                 }
             }
 
-        return true
+        return@withContext true
     }
 
 //    suspend fun addToUserInventory(id: Int, itemId: Int, inv: List<Int>): Boolean = withContext(Dispatchers.IO) {
@@ -326,7 +326,7 @@ class UserRepository(
 //        }
 //    }
 
-    suspend fun addToUserInventory(id: Int, itemId: Int, inv: List<Int>): Boolean {
+    suspend fun addToUserInventory(id: Int, itemId: Int, inv: List<Int>): Boolean = withContext(Dispatchers.IO) {
 
 
 
@@ -340,7 +340,7 @@ class UserRepository(
                 }
             }
 
-        return true
+        return@withContext true
     }
 
 //    suspend fun setUserProfile(img: String, email: String): Boolean = withContext(Dispatchers.IO) {
@@ -355,7 +355,7 @@ class UserRepository(
 //        return@withContext true
 //    }
 
-    suspend fun setUserProfile(img: String, email: String): Boolean {
+    suspend fun setUserProfile(img: String, email: String): Boolean = withContext(Dispatchers.IO) {
         val user = getUserByEmail(email)
 
         val validImgBase64 = img.split(',')[1]
@@ -364,7 +364,7 @@ class UserRepository(
         val path = Path("../files/users/${user.username}/avatar.png")
         path.writeBytes(pictureBytes)
 
-        return true
+        return@withContext true
     }
 
 //    private fun checkUser(email: String) {

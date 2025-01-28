@@ -3,6 +3,6 @@ export default interface Game {
     title: string;
     description: string;
     rating: number;
-    gamePath: string;
-    ownerFk: number;
+    game_path: string;
+    owner_fk: number;
 }

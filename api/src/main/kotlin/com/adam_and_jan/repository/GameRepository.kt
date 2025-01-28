@@ -3,6 +3,7 @@ package com.adam_and_jan.repository
 import com.adam_and_jan.dto.GameDto
 import com.adam_and_jan.mappers.GameMapper
 import com.adam_and_jan.models.Game
+import com.adam_and_jan.models.GameTag
 import com.adam_and_jan.models.Tag
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -13,7 +14,6 @@ import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.postgrest.query.Columns
 
 class GameRepository(
-    private val connection: Connection,
     private val client: SupabaseClient
 ) {
     companion object {
@@ -37,11 +37,11 @@ class GameRepository(
 //        return@withContext true
 //    }
 
-    suspend fun create(game: Game): Boolean {
+    suspend fun create(game: Game): Boolean = withContext(Dispatchers.IO) {
         client.postgrest["games"]
             .insert(game)
 
-        return true
+        return@withContext true
     }
 
 
@@ -58,11 +58,11 @@ class GameRepository(
 //        return@withContext games
 //    }
 
-    suspend fun getAllGames(): List<Game> {
+    suspend fun getAllGames(): List<Game> = withContext(Dispatchers.IO)  {
         val query = client.postgrest["games"]
             .select()
 
-        return query.decodeList<Game>()
+        return@withContext query.decodeList<Game>()
     }
 
 
@@ -80,7 +80,7 @@ class GameRepository(
 //        throw Exception("Game not found")
 //    }
 
-    suspend fun getGame(id: Int): GameDto {
+    suspend fun getGame(id: Int): GameDto = withContext(Dispatchers.IO)  {
         val query = client.postgrest["games"]
             .select() {
                 filter {
@@ -89,7 +89,7 @@ class GameRepository(
             }
 
         val game = query.decodeSingle<Game>()
-        return GameMapper.toDto(game)
+        return@withContext GameMapper.toDto(game)
     }
 
 //    suspend fun getAllTags(): List<Tag> = withContext(Dispatchers.IO) {
@@ -105,10 +105,11 @@ class GameRepository(
 //        return@withContext tags
 //    }
 
-    suspend fun getAllTags(): List<Tag> {
-        val query = client.postgrest["tags"]
+    suspend fun getAllTags(): List<Tag> = withContext(Dispatchers.IO)  {
+        val query = client.postgrest
+            .from("tags")
             .select()
-        return query.decodeList<Tag>()
+        return@withContext query.decodeList<Tag>()
     }
 
 //    suspend fun getAllGamesByTag(id: Int): List<Game> = withContext(Dispatchers.IO) {
@@ -125,25 +126,25 @@ class GameRepository(
 //        return@withContext games
 //    }
 
-    suspend fun getAllGamesByTag(id: Int): List<Game> {
+    suspend fun getAllGamesByTag(id: Int): List<Game> = withContext(Dispatchers.IO)  {
 
         val subquery = client.postgrest["games_tags"]
-            .select(columns = Columns.list("game_id")) {
+            .select() {
                 filter {
                     eq("tag_id", id)
                 }
             }
 
-        val gameId = subquery.decodeSingle<Int>()
+        val gameTag = subquery.decodeSingle<GameTag>()
 
         val query = client.postgrest["games"]
             .select() {
                 filter {
-                    eq("id", gameId)
+                    eq("id", gameTag.game_id)
                 }
             }
 
-        return query.decodeList<Game>()
+        return@withContext query.decodeList<Game>()
     }
 
 //    private fun getGame(resultSet: ResultSet): Game {

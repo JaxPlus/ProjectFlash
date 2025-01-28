@@ -15,11 +15,11 @@ class JwtService(
     //private val userRepository: UserRepository,
 ) {
 
-    private val secret = getConfigProperty("jwt.secret")
-    private val issuer = getConfigProperty("jwt.issuer")
-    private val audience = getConfigProperty("jwt.audience")
+    private val secret = "adergresdfhcgrdetfdhabtrhredf"//getConfigProperty("jwt.secret")
+    private val issuer = "http://localhost"//getConfigProperty("jwt.issuer")
+    private val audience = "my-audience"//getConfigProperty("jwt.audience")
 
-    val realm = getConfigProperty("jwt.realm")
+    val realm = "my-realm"//getConfigProperty("jwt.realm")
 
     val jwtVerifier: JWTVerifier =
         JWT
