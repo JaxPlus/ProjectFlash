@@ -1,6 +1,5 @@
 package com.adam_and_jan.plugins.services
 
-import com.adam_and_jan.repository.UserRepository
 import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
@@ -12,7 +11,6 @@ import java.util.Date
 
 class JwtService(
     private val application: Application,
-    //private val userRepository: UserRepository,
 ) {
 
     private val secret = "adergresdfhcgrdetfdhabtrhredf"//getConfigProperty("jwt.secret")

@@ -1,7 +1,6 @@
 package com.adam_and_jan.models
 
 import kotlinx.serialization.Serializable
-import org.mindrot.jbcrypt.BCrypt
 
 @Serializable
 data class User (

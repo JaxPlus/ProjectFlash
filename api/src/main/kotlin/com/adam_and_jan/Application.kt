@@ -43,7 +43,6 @@ fun Application.module() {
         install(Postgrest)
     }
 
-    //val dbconnection: Connection = connectToPostgres(embedded = true)
     val userRepository = UserRepository(client)
     val refreshTokenRepository = RefreshTokenRepository()
     val shopRepository = ShopRepository(client)

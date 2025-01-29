@@ -10,7 +10,6 @@ plugins {
     kotlin("jvm") version "2.1.10"
     id("io.ktor.plugin") version "3.0.3"
     id("org.jetbrains.kotlin.plugin.serialization") version "2.1.10"
-    //kotlin("plugin.serialization") version "2.1.0"
 }
 
 group = "com.adam_and_jan"
@@ -50,11 +49,4 @@ dependencies {
     //Supabase
     implementation("io.github.jan-tennert.supabase:postgrest-kt:3.0.3")
     implementation("io.ktor:ktor-client-cio:$ktor_version")
-
-
-//    implementation(platform("io.github.jan-tennert.supabase:bom:3.0.3"))
-//    implementation("io.github.jan-tennert.supabase:postgrest-kt")
-//    implementation("io.github.jan-tennert.supabase:realtime-kt")
-//
-//    implementation("io.ktor:ktor-client-java:$ktor_version")
 }

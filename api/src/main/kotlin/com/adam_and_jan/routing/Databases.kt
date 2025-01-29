@@ -9,21 +9,15 @@ import com.adam_and_jan.repository.UserRepository
 import com.adam_and_jan.routing.request.ProfileImgRequest
 import com.adam_and_jan.routing.request.ShopItemRequest
 import com.adam_and_jan.routing.request.UsernameRequest
-import io.github.cdimascio.dotenv.dotenv
 import io.github.jan.supabase.SupabaseClient
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.authenticate
 import io.ktor.server.auth.jwt.JWTPrincipal
 import io.ktor.server.auth.principal
-import io.ktor.server.http.content.staticFiles
-import io.ktor.server.http.content.staticResources
 import io.ktor.server.request.receive
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import java.io.File
-import java.sql.*
-import kotlin.io.path.Path
 
 fun Application.configureDatabases(
     shopService: ShopService,
@@ -206,21 +200,3 @@ fun extractPrincipalEmail(call: ApplicationCall): String? =
         ?.payload
         ?.getClaim("email")
         ?.asString()
-
-
-//fun Application.connectToPostgres(embedded: Boolean): Connection {
-//    Class.forName("org.postgresql.Driver")
-//
-//    val dotenv = dotenv()
-//
-//    if (embedded) {
-//        // DriverManager.getConnection("jdbc:<host>:<port>/<baza_danych>", "nazwa użytkownika", "hasło")
-//        return DriverManager.getConnection(dotenv["DATABASE_URL"], dotenv["DATABASE_USERNAME"], dotenv["DATABASE_PASSWORD"])
-//    } else {
-//        val url = environment.config.property("postgres.url").getString()
-//        val user = environment.config.property("postgres.user").getString()
-//        val password = environment.config.property("postgres.password").getString()
-//
-//        return DriverManager.getConnection(url, user, password)
-//    }
-//}
