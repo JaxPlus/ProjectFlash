@@ -80,21 +80,19 @@ class UserRepository(
 //    }
 
     suspend fun create(userDto: UserCreateDto): Int = withContext(Dispatchers.IO) {
-        val user = UserInsert(userDto.username, userDto.email, userDto.password, 10000, 0, listOf())
 
-        val userInsert = client.postgrest["users"]
-            .insert(user) {
-                select()
-            }.decodeSingle<User>()
+        val salt = BCrypt.gensalt()
+        val hashedPassword = BCrypt.hashpw(userDto.password, salt)
 
+        val user = UserInsert(userDto.username, userDto.email, hashedPassword, 10000, 0, listOf(1, 2))
 
         val usernameExists = client.postgrest["users"]
             .select() {
                 filter {
-                    eq("username", userDto.username)
+                    eq("username", user.username)
                 }
             }
-        if(usernameExists.decodeSingle()) {
+        if(!usernameExists.decodeList<User>().isEmpty()) {
             throw Exception("Username is already taken")
         }
 
@@ -102,12 +100,18 @@ class UserRepository(
         val emailExists = client.postgrest["users"]
             .select() {
                 filter {
-                    eq("email", userDto.email)
+                    eq("email", user.email)
                 }
             }
-        if(emailExists.decodeSingle()) {
+        if(!emailExists.decodeList<User>().isEmpty()) {
             throw Exception("Email already exists")
         }
+
+        val userInsert = client.postgrest["users"]
+            .insert(user) {
+                select()
+            }.decodeSingle<User>()
+
 
         if(!userInsert.id.toString().isEmpty()) {
             Path("../files/users/${user.username}").createDirectory()
@@ -187,6 +191,8 @@ class UserRepository(
         val query = client.postgrest["users"]
             .select()
 
+
+
         return@withContext query.decodeList<User>()
     }
 
@@ -243,7 +249,7 @@ class UserRepository(
             }
 
         val result = query.decodeSingle<User>()
-        val passFromDB = result.email
+        val passFromDB = result.password
         val checkPw = BCrypt.checkpw(password, passFromDB)
 
         return@withContext checkPw

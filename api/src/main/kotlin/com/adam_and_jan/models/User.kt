@@ -12,10 +12,4 @@ data class User (
     val money: Int,
     val ranking_points: Int,
     val inventory: List<Int>,
-){
-
-    fun hashedPassword(): String {
-        val salt = BCrypt.gensalt()
-        return BCrypt.hashpw(password, salt)
-    }
-}
+)
