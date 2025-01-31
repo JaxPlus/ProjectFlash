@@ -4,7 +4,6 @@ val postgres_version: String by project
 val h2_version: String by project
 val dotenv_version: String by project
 val ktor_version: String by project
-val supabase_version: String by project
 
 plugins {
     kotlin("jvm") version "2.1.10"
@@ -43,10 +42,11 @@ dependencies {
     implementation("org.mindrot:jbcrypt:0.4")
 
     //JWT
-    implementation("io.ktor:ktor-server-auth:3.0.3")
-    implementation("io.ktor:ktor-server-auth-jwt:3.0.3")
+    implementation("io.ktor:ktor-server-auth:$ktor_version")
+    implementation("io.ktor:ktor-server-auth-jwt:$ktor_version")
 
     //Supabase
-    implementation("io.github.jan-tennert.supabase:postgrest-kt:3.0.3")
+    implementation("io.github.jan-tennert.supabase:postgrest-kt:$ktor_version")
+    implementation("io.github.jan-tennert.supabase:storage-kt:$ktor_version")
     implementation("io.ktor:ktor-client-cio:$ktor_version")
 }

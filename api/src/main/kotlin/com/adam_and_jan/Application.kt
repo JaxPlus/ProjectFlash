@@ -37,8 +37,8 @@ fun Application.module() {
     }
 
     val client = createSupabaseClient(
-        supabaseUrl = "https://lftqqullqnydsseyxjep.supabase.co",//environment.config.property("ktor.supabase.url").getString(),
-        supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxmdHFxdWxscW55ZHNzZXl4amVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzczMDU0NDAsImV4cCI6MjA1Mjg4MTQ0MH0.Zjw4S0rCpw4GUQHhpHZIgBgN2JVeUX6hg6YmOYELrOE"//environment.config.property("ktor.supabase.key").getString()
+        supabaseUrl = applicationEnvironment().config.property("ktor.supabase.url").getString(),
+        supabaseKey = applicationEnvironment().config.property("ktor.supabase.key").getString(),
     ) {
         install(Postgrest)
     }

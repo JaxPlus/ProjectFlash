@@ -23,7 +23,7 @@ watch(
         gameStore.getGameById(newId.toString());
 
         setTimeout(() => {
-          player.load("../src/assets/games/" + gameStore?.game?.gamePath);
+          player.load("../src/assets/games/" + gameStore?.game?.game_path);
         }, 1000)
 
         window.scrollTo(0,0);
@@ -35,7 +35,7 @@ setTimeout(() => {
     player.style.width = "100%";
     document.getElementById("container")?.appendChild(player)
     
-    player.load("../src/assets/games/" + gameStore?.game?.gamePath);
+    player.load("../src/assets/games/" + gameStore?.game?.game_path);
     isLoading.value = false;
 }, 1000)
 

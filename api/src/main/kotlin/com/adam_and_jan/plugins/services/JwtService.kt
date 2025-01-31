@@ -7,17 +7,20 @@ import io.ktor.server.application.Application
 import io.ktor.server.auth.jwt.JWTCredential
 import io.ktor.server.auth.jwt.JWTPrincipal
 import java.util.Date
+import io.ktor.server.application.*
+import io.ktor.server.engine.applicationEnvironment
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 
 
 class JwtService(
     private val application: Application,
 ) {
+    private val secret = applicationEnvironment().config.property("jwt.secret").getString()
+    private val issuer = applicationEnvironment().config.property("jwt.issuer").getString()
+    private val audience = applicationEnvironment().config.property("jwt.audience").getString()
 
-    private val secret = "adergresdfhcgrdetfdhabtrhredf"//getConfigProperty("jwt.secret")
-    private val issuer = "http://localhost"//getConfigProperty("jwt.issuer")
-    private val audience = "my-audience"//getConfigProperty("jwt.audience")
-
-    val realm = "my-realm"//getConfigProperty("jwt.realm")
+    val realm = applicationEnvironment().config.property("jwt.realm").getString()
 
     val jwtVerifier: JWTVerifier =
         JWT
