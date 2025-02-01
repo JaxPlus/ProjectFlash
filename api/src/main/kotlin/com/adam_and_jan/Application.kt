@@ -9,6 +9,7 @@ import com.adam_and_jan.plugins.services.UserService
 import com.adam_and_jan.repository.RefreshTokenRepository
 import com.adam_and_jan.repository.ShopRepository
 import com.adam_and_jan.repository.UserRepository
+import com.typesafe.config.ConfigFactory
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMethod
 import io.ktor.server.application.*
@@ -25,6 +26,8 @@ fun main(args: Array<String>) {
 }
 
 fun Application.module() {
+    val config = ConfigFactory.parseResources("application.conf").resolve()
+
     install(CORS) {
         allowHost("localhost:5173")
         allowHeader(HttpHeaders.ContentType)
@@ -37,8 +40,10 @@ fun Application.module() {
     }
 
     val client = createSupabaseClient(
-        supabaseUrl = applicationEnvironment().config.property("ktor.supabase.url").getString(),
-        supabaseKey = applicationEnvironment().config.property("ktor.supabase.key").getString(),
+//        supabaseUrl = applicationEnvironment().config.property("ktor.supabase.url").getString(),
+//        supabaseKey = applicationEnvironment().config.property("ktor.supabase.key").getString(),
+        supabaseUrl = config.getString("ktor.supabase.url"),
+        supabaseKey = config.getString("ktor.supabase.key"),
     ) {
         install(Postgrest)
     }
