@@ -12,7 +12,13 @@ userStore.getUser();
 
 const isAccountShown = ref(true);
 const isStatisticsShown = ref(false);
-const isSuccessShown = ref(false);
+const isSuccessShown = ref<{
+    isShown: boolean,
+    message: string,
+}>({
+    isShown: false,
+    message: "",
+});
 const img = ref("")
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
 
@@ -40,7 +46,7 @@ const profileSchema = z.object({
 
                 return false;
             },
-            ".jpg, .jpeg, .png and .webp files are accepted."
+            ".jpg, .jpeg, .png and .bmp files are accepted."
         ),
 });
 const profileConfig: Config<any> = {
@@ -72,16 +78,25 @@ function onUsernameSubmit(values: z.infer<typeof usernameSchema>) {
     }
 
     userStore.editUsername(values.username);
+
+    isSuccessShown.value.isShown = true;
+    isSuccessShown.value.message = "Username changed successfully!";
+    
+
+    setTimeout(() => {
+        isSuccessShown.value.isShown = false;
+    }, 4000);
 }
 
 function onProfileSubmit(values: z.infer<typeof profileSchema>) {
     img.value = values.profile;
     userStore.editProfile(img.value);
     userStore.userProfile = img.value;
-    isSuccessShown.value = true;
+    isSuccessShown.value.isShown = true;
+    isSuccessShown.value.message = "Profile changed successfully!";
     
     setTimeout(() => {
-        isStatisticsShown.value = false;
+        isSuccessShown.value.isShown = false;
     }, 4000);
 }
 
@@ -163,7 +178,7 @@ function onProfileSubmit(values: z.infer<typeof profileSchema>) {
             </div>
         </div>
     </div>
-    <FlashPopover v-if="isSuccessShown" message="Successfully changed profile!" variant="success" />
+    <FlashPopover v-if="isSuccessShown.isShown" :message="isSuccessShown.message" variant="success" />
 </template>
 
 <style scoped>

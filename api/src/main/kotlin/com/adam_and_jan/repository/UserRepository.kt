@@ -3,17 +3,15 @@ package com.adam_and_jan.repository
 import com.adam_and_jan.dto.UserCreateDto
 import com.adam_and_jan.dto.UserDto
 import com.adam_and_jan.mappers.UserMapper
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import com.adam_and_jan.models.User
 import com.adam_and_jan.models.UserInsert
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.postgrest.postgrest
+import io.github.jan.supabase.storage.storage
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.mindrot.jbcrypt.BCrypt
-import java.util.Base64
-import kotlin.io.path.Path
-import kotlin.io.path.createDirectory
-import kotlin.io.path.writeBytes
+import java.util.*
 
 class UserRepository(
     private  val client: SupabaseClient
@@ -54,7 +52,7 @@ class UserRepository(
 
 
         if(!userInsert.id.toString().isEmpty()) {
-            Path("../files/users/${user.username}").createDirectory()
+//            Path("../files/users/${user.username}").createDirectory()
             return@withContext userInsert.id
         } else {
             throw Exception("Unable to retrieve the id of the newly created user.")
@@ -86,8 +84,6 @@ class UserRepository(
     suspend fun getAllUsers(): List<User> = withContext(Dispatchers.IO) {
         val query = client.postgrest["users"]
             .select()
-
-
 
         return@withContext query.decodeList<User>()
     }
@@ -150,9 +146,6 @@ class UserRepository(
     }
 
     suspend fun addToUserInventory(id: Int, itemId: Int, inv: List<Int>): Boolean = withContext(Dispatchers.IO) {
-
-
-
         client.postgrest["users"]
             .update({
                 set("inventory", (inv + itemId).toTypedArray())
@@ -166,14 +159,32 @@ class UserRepository(
         return@withContext true
     }
 
+    suspend fun getUserProfile(email: String): String = withContext(Dispatchers.IO) {
+        val user = getUserByEmail(email)
+
+        return@withContext if (checkIfFileExists("user_avatars", "${user.username}.png")) {
+            client.storage.from("user_avatars").publicUrl("${user.username}.png")
+        }
+        else {
+            throw Exception("No profile found for user ${user.username}.")
+        }
+    }
+
+    private suspend fun checkIfFileExists(bucket: String, fileName: String): Boolean = withContext(Dispatchers.IO) {
+        val files = client.storage.from(bucket).list()
+
+        return@withContext files.any { it.name == fileName }
+    }
+
     suspend fun setUserProfile(img: String, email: String): Boolean = withContext(Dispatchers.IO) {
         val user = getUserByEmail(email)
 
         val validImgBase64 = img.split(',')[1]
-
         val pictureBytes = Base64.getMimeDecoder().decode(validImgBase64)
-        val path = Path("../files/users/${user.username}/avatar.png")
-        path.writeBytes(pictureBytes)
+
+        client.storage.from("user_avatars").upload("${user.username}.png", pictureBytes) {
+            upsert = false
+        }
 
         return@withContext true
     }

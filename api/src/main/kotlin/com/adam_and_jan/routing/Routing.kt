@@ -24,7 +24,7 @@ fun Application.configureRouting(
 
                 authResponse?.let {
                     call.respond(authResponse)
-                } ?: call.respond(HttpStatusCode.Unauthorized)
+                } ?: call.respond(HttpStatusCode.Unauthorized, "Invalid email or password.")
             }
 
             post("/refresh") {

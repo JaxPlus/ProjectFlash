@@ -28,7 +28,6 @@ fun Application.configureDatabases(
     val shopRepository = ShopRepository(client)
 
     routing {
-
         get("/games") {
             try {
                 val games = gameRepository.getAllGames()
@@ -125,7 +124,7 @@ fun Application.configureDatabases(
                     val email = extractPrincipalEmail(call) ?: throw IllegalArgumentException("Invalid Email")
                     val itemRequest = call.receive<ShopItemRequest>()
 
-                    var res = shopService.buyShopItem(itemRequest.itemId, email)
+                    val res = shopService.buyShopItem(itemRequest.itemId, email)
 
                     call.respond(HttpStatusCode.OK, res)
                 } catch (e: Exception) {
@@ -142,6 +141,18 @@ fun Application.configureDatabases(
 
                     call.respond(HttpStatusCode.OK, res)
                 } catch (e: Exception) {
+                    call.respond(HttpStatusCode.BadRequest, e.message ?: "")
+                }
+            }
+
+            get("/user/profile") {
+                try {
+                    val email = extractPrincipalEmail(call) ?: throw IllegalArgumentException("Invalid Email")
+                    val res = userRepository.getUserProfile(email)
+
+                    call.respond(HttpStatusCode.OK, res)
+                }
+                catch (e: Exception) {
                     call.respond(HttpStatusCode.BadRequest, e.message ?: "")
                 }
             }
@@ -167,7 +178,7 @@ fun Application.configureDatabases(
                 call.respond(HttpStatusCode.Created, id)
             }
             catch (e: Exception) {
-                call.respond(HttpStatusCode.BadRequest, "${e.stackTrace}: ${e.message}" ?: "")
+                call.respond(HttpStatusCode.BadRequest, "${e.stackTrace}: ${e.message}")
             }
         }
 

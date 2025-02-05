@@ -108,6 +108,19 @@ export const useUserStore = defineStore('userStore', () => {
         })
     }
     
+    async function getUserProfile() {
+        await axios.get("http://localhost:8080/user/profile", {
+            headers: {
+                Authorization: `Bearer ${$cookies.get("access-token")}`
+            }
+        }).then(res => {
+            console.log(res);
+            userProfile.value = res.data;
+        }).catch(() => {
+            userProfile.value = "";
+        });
+    }
+    
     function isUserLoggedIn(): boolean {
         return user.value !== null;
     }
@@ -146,6 +159,7 @@ export const useUserStore = defineStore('userStore', () => {
         editUsername,
         getInventoryItems,
         editProfile,
+        getUserProfile,
         isUserLoggedIn,
         logOut,
         mode,
