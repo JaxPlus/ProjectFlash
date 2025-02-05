@@ -18,6 +18,7 @@ import io.ktor.server.netty.*
 import io.ktor.server.plugins.cors.routing.CORS
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.Postgrest
+import io.github.jan.supabase.storage.Storage
 
 
 fun main(args: Array<String>) {
@@ -46,6 +47,7 @@ fun Application.module() {
         supabaseKey = config.getString("ktor.supabase.key"),
     ) {
         install(Postgrest)
+        install(Storage)
     }
 
     val userRepository = UserRepository(client)

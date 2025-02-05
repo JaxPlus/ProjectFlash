@@ -32,17 +32,22 @@ class UserService(
     suspend fun authenticate(dto: UserLoginDto): AuthResponse? {
         val email = dto.email
 
-        return if (getLoginUser(email, dto.password)) {
-            val accessToken = jwtService.createAccessToken(email)
-            val refreshToken = jwtService.createRefreshToken(email)
+        try {
+            return if (getLoginUser(email, dto.password)) {
+                val accessToken = jwtService.createAccessToken(email)
+                val refreshToken = jwtService.createRefreshToken(email)
 
-            refreshTokenRepository.save(refreshToken, email)
+                refreshTokenRepository.save(refreshToken, email)
 
-            AuthResponse(
-                accessToken = accessToken,
-                refreshToken = refreshToken
-            )
-        } else null
+                AuthResponse(
+                    accessToken = accessToken,
+                    refreshToken = refreshToken
+                )
+            } else null
+        }
+        catch (e: Exception) {
+            return null
+        }
     }
 
     suspend fun refreshToken(token: String): String? {

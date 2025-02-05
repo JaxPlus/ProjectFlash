@@ -3,24 +3,26 @@ package com.adam_and_jan.plugins.services
 import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
-import io.ktor.server.application.Application
-import io.ktor.server.auth.jwt.JWTCredential
-import io.ktor.server.auth.jwt.JWTPrincipal
-import java.util.Date
+import com.typesafe.config.ConfigFactory
 import io.ktor.server.application.*
-import io.ktor.server.engine.applicationEnvironment
-import io.ktor.server.response.*
-import io.ktor.server.routing.*
+import io.ktor.server.auth.jwt.*
+import java.util.*
 
 
 class JwtService(
     private val application: Application,
 ) {
-    private val secret = applicationEnvironment().config.property("jwt.secret").getString()
-    private val issuer = applicationEnvironment().config.property("jwt.issuer").getString()
-    private val audience = applicationEnvironment().config.property("jwt.audience").getString()
+    val config = ConfigFactory.parseResources("application.conf").resolve()
+//    private val secret = applicationEnvironment().config.property("jwt.secret").getString()
+//    private val issuer = applicationEnvironment().config.property("jwt.issuer").getString()
+//    private val audience = applicationEnvironment().config.property("jwt.audience").getString()
 
-    val realm = applicationEnvironment().config.property("jwt.realm").getString()
+    private val secret = config.getString("jwt.secret")
+    private val issuer = config.getString("jwt.issuer")
+    private val audience = config.getString("jwt.audience")
+
+//    val realm = applicationEnvironment().config.property("jwt.realm").getString()
+    val realm = config.getString("jwt.realm")
 
     val jwtVerifier: JWTVerifier =
         JWT
