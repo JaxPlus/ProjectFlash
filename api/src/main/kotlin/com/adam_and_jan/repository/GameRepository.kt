@@ -41,6 +41,26 @@ class GameRepository(
         return@withContext GameMapper.toDto(game)
     }
 
+    suspend fun getGameFile(id: Int): String = withContext(Dispatchers.IO) {
+        val query = client.postgrest["games"]
+            .select() {
+                filter {
+                    eq("id", id)
+                }
+            }
+
+        val game = query.decodeSingle<Game>()
+
+        val gameFile = client.storage.from("game_files").publicUrl(game.game_path)
+
+        return@withContext if (!gameFile.isEmpty()) {
+            gameFile
+        }
+        else {
+            throw Exception("No game found. ")
+        }
+    }
+
     suspend fun getAllTags(): List<Tag> = withContext(Dispatchers.IO)  {
         val query = client.postgrest
             .from("tags")
@@ -77,17 +97,6 @@ class GameRepository(
             throw Exception("No thumbnail for game ${gameTitle}.")
         }
     }
-
-//    suspend fun getGamesThumbnails(): List<String> = withContext(Dispatchers.IO) {
-//        val files = client.storage.from("game_images").list()
-//        val result: List<String> = mutableListOf()
-//
-//        try {
-//            files.forEach { file ->
-//                result.
-//            }
-//        }
-//    }
 
     private suspend fun checkIfFileExists(bucket: String, fileName: String): Boolean = withContext(Dispatchers.IO) {
         val files = client.storage.from(bucket).list()
