@@ -44,6 +44,7 @@ function buyItem() {
         itemId: props.item.id
     }, {
         headers: {
+            // @ts-ignore
             Authorization: `Bearer ${$cookies.get("access-token")}`
         }
     }).then(() => {
@@ -66,20 +67,20 @@ function buyItem() {
             class="h-[8rem] w-auto m-2 grid grid-cols-3 rounded-2xl outline-2 outline outline-primary outline-offset-2"
             :class="props.class">
             <div
-                :class="`h-full w-full ${props.item.name} ${props.item.name === 'default' ? defaultTheme.primary : 'bg-primary'} rounded-l-2xl`"/>
+                :class="`h-full w-full ${props.item.name} ${props.item.name === 'light' ? defaultTheme.primary : 'bg-primary'} rounded-l-2xl`"/>
             <div
-                :class="`h-full w-full ${props.item.name} ${props.item.name === 'default' ? defaultTheme.secondary : 'bg-secondary'} flex justify-center items-center`">
+                :class="`h-full w-full ${props.item.name} ${props.item.name === 'light' ? defaultTheme.secondary : 'bg-secondary'} flex justify-center items-center`">
                 <h2 v-if="props.showDisplayName"
                     :class="`text-3xl ${props.item.type == 'default' ? 'text-[#39393c]' : 'text-text-color'}`">
-                    {{ props.item.displayName }}</h2>
+                    {{ props.item.display_name }}</h2>
             </div>
             <div
-                :class="`h-full w-full ${props.item.name} ${props.item.name === 'default' ? defaultTheme.text : 'bg-text-color'} rounded-r-2xl`"/>
+                :class="`h-full w-full ${props.item.name} ${props.item.name === 'light' ? defaultTheme.text : 'bg-text-color'} rounded-r-2xl`"/>
         </DialogTrigger>
 
         <DialogContent>
             <DialogHeader>
-                <DialogTitle>{{ props.item.displayName }}</DialogTitle>
+                <DialogTitle>{{ props.item.display_name }}</DialogTitle>
                 <DialogDescription>
                     {{ props.item.description }}
                 </DialogDescription>

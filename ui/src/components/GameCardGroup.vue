@@ -4,7 +4,7 @@ import {ScrollArea} from "@/components/ui/scroll-area";
 import Game from "@/models/Game.ts";
 import {Skeleton} from "@/components/ui/skeleton";
 
-const props = defineProps<{
+defineProps<{
     groupTitle: string;
     gameCards: Game[];
     isLoading?: boolean;

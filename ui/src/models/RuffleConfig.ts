@@ -126,6 +126,30 @@ export interface URLLoadOptions {
     // playerRuntime?: PlayerRuntime;
 }
 
+interface PlayerV1 {
+    addFSCommandHandler(
+        handler: (command: string, args: string) => void,
+    ): void;
+    config: object | URLLoadOptions | DataLoadOptions;
+    loadedConfig: null | URLLoadOptions | DataLoadOptions;
+    get readyState(): ReadyState;
+    // get metadata(): null | MovieMetadata;
+    reload(): Promise<void>;
+    load(options: string | URLLoadOptions | DataLoadOptions): Promise<void>;
+    get volume(): number;
+    // set volume(value: number): void;
+    get fullscreenEnabled(): boolean;
+    get isFullscreen(): boolean;
+    requestFullscreen(): void;
+    exitFullscreen(): void;
+    get suspended(): boolean;
+    suspend(): void;
+    resume(): void;
+    // set traceObserver(observer: null | (message: string) => void): void;
+    downloadSwf(): Promise<void>;
+    displayMessage(message: string): void;
+    callExternalInterface(name: string, ...args: unknown[]): unknown;
+}
 
 export type APIVersions = {
     1: PlayerV1;
@@ -137,7 +161,7 @@ export interface PlayerElement extends Node {
     config: object | URLLoadOptions | DataLoadOptions;
     loadedConfig: null | URLLoadOptions | DataLoadOptions;
     get readyState(): ReadyState;
-    get metadata(): null | MovieMetadata;
+    // get metadata(): null | MovieMetadata;
     reload(): Promise<void>;
     load(options: string | URLLoadOptions | DataLoadOptions): Promise<void>;
     play(): void;

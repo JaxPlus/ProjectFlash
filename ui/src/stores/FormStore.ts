@@ -1,4 +1,6 @@
-﻿import {defineStore} from "pinia";
+﻿// @ts-nocheck
+
+import {defineStore} from "pinia";
 import {computed, ref} from "vue";
 import axios from "axios";
 import {Config} from "@/components/ui/auto-form";
@@ -15,15 +17,14 @@ export const useFormStore = defineStore('formStore', () => {
         response: ""
     })
     const formSchema = ref()
-    const formConfig: Config<any> = ref()
+    const formConfig = ref<Config<any>>()
     const url = computed(() => {
         return "http://127.0.0.1:8080".concat(formType.value === "signIn" ? "/api/auth" : "/users")
     })
 
-    async function userSignAction(values: z.infer<typeof props.formSchema>) {
+    async function userSignAction(values: z.infer<typeof formSchema.value>) {
         axios.post(url.value, values).then((res) => {
             response.value.error = ""
-            // console.log(res)
             
             switch (url.value) {
                 case "http://127.0.0.1:8080/users":

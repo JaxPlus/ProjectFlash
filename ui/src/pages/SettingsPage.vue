@@ -23,7 +23,7 @@ const img = ref("")
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
 
 const usernameSchema = z.object({
-    username: z.string().describe("Here you can change your username!").default(userStore.user?.username),
+    username: z.string().describe("Here you can change your username!").default(userStore.user?.username ? userStore.user?.username : ""),
 });
 const usernameConfig: Config<any> = {
     username: {

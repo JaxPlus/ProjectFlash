@@ -5,7 +5,6 @@ import Item from "@/models/Item.ts";
 import InventoryItem from "@/components/InventoryItem.vue";
 import {Skeleton} from "@/components/ui/skeleton";
 import {Button} from "@/components/ui/button";
-import axios from "axios";
 
 const userStore = useUserStore()
 

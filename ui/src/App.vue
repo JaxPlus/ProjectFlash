@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Navbar from "./components/Navbar.vue";
 import {useUserStore} from "@/stores/UserStore.ts";
-const userStore = useUserStore()
+useUserStore()
 </script>
 
 <template>

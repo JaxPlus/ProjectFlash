@@ -35,15 +35,15 @@ const defaultTheme = ref({
                 @mouseleave="isThemeNameShown = false"
                 class="w-full h-full scale-95 grid grid-cols-3 rounded-2xl outline-2 outline outline-primary outline-offset-2">
                 <div
-                    :class="`h-full w-full ${props.item.name} ${props.item.name === 'default' ? defaultTheme.primary : 'bg-primary'} rounded-l-2xl`"/>
+                    :class="`h-full w-full ${props.item.name} ${props.item.name === 'light' ? defaultTheme.primary : 'bg-primary'} rounded-l-2xl`"/>
                 <div
-                    :class="`h-full w-full ${props.item.name} ${props.item.name === 'default' ? defaultTheme.secondary : 'bg-secondary'} flex justify-center items-center`" />
+                    :class="`h-full w-full ${props.item.name} ${props.item.name === 'light' ? defaultTheme.secondary : 'bg-secondary'} flex justify-center items-center`" />
                 <div
-                    :class="`h-full w-full ${props.item.name} ${props.item.name === 'default' ? defaultTheme.text : 'bg-text-color'} rounded-r-2xl`"/>
+                    :class="`h-full w-full ${props.item.name} ${props.item.name === 'light' ? defaultTheme.text : 'bg-text-color'} rounded-r-2xl`"/>
                 <Transition>
-                    <div v-if="isThemeNameShown" :class="`h-full w-full absolute flex justify-center items-center ${props.item.name} ${props.item.name === 'default' ? 'bg-[#29bcbc]/75' : 'bg-primary/75'} rounded-2xl`">
+                    <div v-if="isThemeNameShown" :class="`h-full w-full absolute flex justify-center items-center ${props.item.name} ${props.item.name === 'light' ? 'bg-[#29bcbc]/75' : 'bg-primary/75'} rounded-2xl`">
                         <h2
-                            :class="`text-xl w-full ${props.item.name} ${props.item.name == 'default' ? 'text-[#39393c]' : 'text-text-color'}`">
+                            :class="`text-xl w-full ${props.item.name} ${props.item.name == 'light' ? 'text-[#39393c]' : 'text-text-color'}`">
                             {{ props.item.display_name }}</h2>
                     </div>
                 </Transition>

@@ -7,7 +7,8 @@ export const changePage = (pathStr: string) => {
 
 export async function retryAction(retryFun: Function, additional: () => void = () => {}, apiCalls = 1) {
     const userStore = useUserStore()
-    
+
+    // @ts-ignore
     if ($cookies.isKey("refresh-token")) {
         const res = await userStore.refreshToken()
         // console.log(apiCalls)

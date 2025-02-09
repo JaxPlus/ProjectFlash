@@ -6,15 +6,16 @@ import axios from "axios";
 import {changePage, retryAction} from "@/utility.ts";
 import Item from "@/models/Item.ts";
 
-type themes = "light" | "dark" | "cafe" | "eva" | "unicorn" | "violet" | "pink" | string;
+export type Themes = "light" | "dark" | "cafe" | "eva" | "unicorn" | "violet" | "pink";
 
 export const useUserStore = defineStore('userStore', () => {
-    const user = ref<User | null>({})
+    const user = ref<User | null>(null)
     const userProfile = ref("");
     
     async function getUser() {
         await axios.get('http://localhost:8080/user', {
             headers: {
+                // @ts-ignore
                 Authorization: `Bearer ${$cookies.get("access-token")}`
             }
         }).then((res) => {
@@ -25,27 +26,22 @@ export const useUserStore = defineStore('userStore', () => {
             await retryAction(getUser, () => {
                 user.value = null;
             })
-            
-            // if ($cookies.isKey("refresh-token")) {
-            //     await refreshToken()
-            //     // await getUser()
-            // }
-            // else {
-            //     user.value = null;
-            //     changePage('/login');
-            // }
         })
     }
     
     async function refreshToken() {
         return await axios.post('http://127.0.0.1:8080/api/auth/refresh', {
+            // @ts-ignore
             token: $cookies.get("refresh-token"),
         }).then((res) => {
+            // @ts-ignore
             $cookies.set("access-token", res.data.token, import.meta.env.VITE_JWT_ACCESS_TOKEN_EXP, null, null, true)
             return true;
         }).catch(() => {
             // console.log(err)
+            // @ts-ignore
             $cookies.remove("refresh-token");
+            // @ts-ignore
             $cookies.remove("access-token");
             changePage("/login");
             return false;
@@ -57,16 +53,18 @@ export const useUserStore = defineStore('userStore', () => {
             editUsername: username
         }, {
             headers: {
+                // @ts-ignore
                 Authorization: `Bearer ${$cookies.get("access-token")}`
             }
         }).then((res) => {
             if (res.data) {
                 user.value = {
                     username: username,
-                    email: user.value?.email
-                }
+                    email: user.value?.email ? user.value?.email : ""
+                } as User
             }
-        }).catch(async (err) => {
+        }).catch(async () => {
+            // @ts-ignore
             if ($cookies.isKey("refresh-token")) {
                 await refreshToken()
                 await editUsername(username)
@@ -80,14 +78,16 @@ export const useUserStore = defineStore('userStore', () => {
     
     async function getInventoryItems(): Promise<Item[]> {
         let items: Item[] = [];
-        for (const itemId of user.value?.inventory) {
-            await axios.get(`http://localhost:8080/shop/${itemId}`)
-                .then(res => {
-                    items.push(res.data)
-                })
-                .catch((err) => {
-                    console.log(err)
-                })
+        if (user.value) {
+            for (const itemId of user.value.inventory) {
+                await axios.get(`http://localhost:8080/shop/${itemId}`)
+                    .then(res => {
+                        items.push(res.data)
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                    })
+            }
         }
         
         return items;
@@ -98,6 +98,7 @@ export const useUserStore = defineStore('userStore', () => {
             img: img,
         }, {
             headers: {
+                // @ts-ignore
                 Authorization: `Bearer ${$cookies.get("access-token")}`
             }
         }).then(res => {
@@ -111,6 +112,7 @@ export const useUserStore = defineStore('userStore', () => {
     async function getUserProfile() {
         await axios.get("http://localhost:8080/user/profile", {
             headers: {
+                // @ts-ignore
                 Authorization: `Bearer ${$cookies.get("access-token")}`
             }
         }).then(res => {
@@ -126,10 +128,12 @@ export const useUserStore = defineStore('userStore', () => {
     }
 
     function logOut() {
+        // @ts-ignore
         $cookies.remove("access-token");
+        // @ts-ignore
         $cookies.remove("refresh-token");
         switchTheme("light");
-        user.value = {};
+        user.value = null;
 
         changePage("/");
     }
@@ -147,7 +151,7 @@ export const useUserStore = defineStore('userStore', () => {
         }
     })
     
-    function switchTheme(changeTo: themes) {
+    function switchTheme(changeTo: Themes) {
         mode.value = changeTo
     }
     

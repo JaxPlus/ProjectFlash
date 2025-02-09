@@ -1,4 +1,4 @@
-import { createApp } from 'vue'
+import {createApp} from 'vue'
 import { createPinia } from "pinia";
 import './index.css'
 import App from './App.vue'
@@ -7,10 +7,14 @@ import VueCookies from "vue-cookies";
 
 const pinia = createPinia()
 
-createApp(App)
+const app = createApp(App)
     .use(router)
     .use(pinia)
     .use(VueCookies, {
         expires: "1d"
     })
-    .mount('#app')
+
+app.config.globalProperties.$cookies = VueCookies.VueCookies
+
+app.mount('#app')
+    

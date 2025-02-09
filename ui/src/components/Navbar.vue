@@ -7,6 +7,7 @@ import {changePage} from "@/utility.ts";
 const isMenu = ref(false);
 
 function handleSignIn() {
+    // @ts-ignore
     if ($cookies.isKey("access-token")) {
         changePage('/profile');
     }
@@ -23,9 +24,7 @@ function handleSignIn() {
             <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 8h12M6 12h12M6 16h12"/></svg>
         </IconButton>
             
-        <!-- logo -->
         <div class="flex items-center hover:cursor-pointer" @click="changePage('/')">
-<!--            <img src="../assets/icons/logo256.png" alt="Flash project Icon" class="h-16 w-16">-->
             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="h-16 w-16" viewBox="0 0 64 64">
                 <g id="surface1">
                     <path class="fill-black" style="stroke:none;fill-rule:evenodd;fill-opacity:1;" d="M 29.375 -0.125 C 31.042969 -0.125 32.707031 -0.125 34.375 -0.125 C 46.847656 1.386719 55.804688 7.804688 61.25 19.125 C 62.605469 22.539062 63.480469 26.039062 63.875 29.625 C 63.875 31.207031 63.875 32.792969 63.875 34.375 C 62.078125 48.429688 54.492188 57.804688 41.125 62.5 C 38.871094 63.113281 36.621094 63.570312 34.375 63.875 C 32.707031 63.875 31.042969 63.875 29.375 63.875 C 15.332031 62.082031 5.957031 54.496094 1.25 41.125 C 0.636719 38.871094 0.179688 36.621094 -0.125 34.375 C -0.125 32.707031 -0.125 31.042969 -0.125 29.375 C 1.386719 16.902344 7.804688 7.945312 19.125 2.5 C 22.464844 1.1875 25.878906 0.3125 29.375 -0.125 Z M 29.375 -0.125 "/>
