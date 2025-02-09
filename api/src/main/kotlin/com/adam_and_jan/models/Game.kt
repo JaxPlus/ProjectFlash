@@ -8,6 +8,6 @@ data class Game(
     val title: String,
     val description: String,
     val rating: Double,
-    val gamePath: String,
-    val ownerFk: Int
+    val game_path: String,
+    val owner_fk: Int
 )

@@ -10,8 +10,8 @@ object GameMapper {
             game.title,
             game.description,
             game.rating,
-            game.gamePath,
-            game.ownerFk
+            game.game_path,
+            game.owner_fk
         )
     }
 }

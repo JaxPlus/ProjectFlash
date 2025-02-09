@@ -9,32 +9,25 @@ import com.adam_and_jan.repository.UserRepository
 import com.adam_and_jan.routing.request.ProfileImgRequest
 import com.adam_and_jan.routing.request.ShopItemRequest
 import com.adam_and_jan.routing.request.UsernameRequest
-import io.github.cdimascio.dotenv.dotenv
+import io.github.jan.supabase.SupabaseClient
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.authenticate
 import io.ktor.server.auth.jwt.JWTPrincipal
 import io.ktor.server.auth.principal
-import io.ktor.server.http.content.staticFiles
-import io.ktor.server.http.content.staticResources
 import io.ktor.server.request.receive
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import java.io.File
-import java.sql.*
-import kotlin.io.path.Path
 
 fun Application.configureDatabases(
     shopService: ShopService,
+    client: SupabaseClient
 ) {
-
-    val dbconnection: Connection = connectToPostgres(embedded = true)
-    val userRepository = UserRepository(dbconnection)
-    val gameRepository = GameRepository(dbconnection)
-    val shopRepository = ShopRepository(dbconnection)
+    val userRepository = UserRepository(client)
+    val gameRepository = GameRepository(client)
+    val shopRepository = ShopRepository(client)
 
     routing {
-
         get("/games") {
             try {
                 val games = gameRepository.getAllGames()
@@ -53,6 +46,29 @@ fun Application.configureDatabases(
 
                 call.respond(HttpStatusCode.OK, game)
             } catch (e: Exception) {
+                call.respond(HttpStatusCode.NotFound, e.message ?: "")
+            }
+        }
+
+        get("/games/files/{id}") {
+            val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
+            try {
+                val gameFile = gameRepository.getGameFile(id)
+
+                call.respond(HttpStatusCode.OK, gameFile)
+            } catch (e: Exception) {
+                call.respond(HttpStatusCode.NotFound, e.message ?: "")
+            }
+        }
+
+        get("/game/thumbnail/{title}") {
+            val title = call.parameters["title"] ?: throw IllegalArgumentException("Invalid Title")
+
+            try {
+                val gameImgUrl = gameRepository.getGameThumbnail(title)
+                call.respond(HttpStatusCode.OK, gameImgUrl)
+            }
+            catch (e: Exception) {
                 call.respond(HttpStatusCode.NotFound, e.message ?: "")
             }
         }
@@ -131,7 +147,7 @@ fun Application.configureDatabases(
                     val email = extractPrincipalEmail(call) ?: throw IllegalArgumentException("Invalid Email")
                     val itemRequest = call.receive<ShopItemRequest>()
 
-                    var res = shopService.buyShopItem(itemRequest.itemId, email)
+                    val res = shopService.buyShopItem(itemRequest.itemId, email)
 
                     call.respond(HttpStatusCode.OK, res)
                 } catch (e: Exception) {
@@ -148,6 +164,18 @@ fun Application.configureDatabases(
 
                     call.respond(HttpStatusCode.OK, res)
                 } catch (e: Exception) {
+                    call.respond(HttpStatusCode.BadRequest, e.message ?: "")
+                }
+            }
+
+            get("/user/profile") {
+                try {
+                    val email = extractPrincipalEmail(call) ?: throw IllegalArgumentException("Invalid Email")
+                    val res = userRepository.getUserProfile(email)
+
+                    call.respond(HttpStatusCode.OK, res)
+                }
+                catch (e: Exception) {
                     call.respond(HttpStatusCode.BadRequest, e.message ?: "")
                 }
             }
@@ -173,7 +201,7 @@ fun Application.configureDatabases(
                 call.respond(HttpStatusCode.Created, id)
             }
             catch (e: Exception) {
-                call.respond(HttpStatusCode.BadRequest, "${e.stackTrace}: ${e.message}" ?: "")
+                call.respond(HttpStatusCode.BadRequest, "${e.stackTrace}: ${e.message}")
             }
         }
 
@@ -206,21 +234,3 @@ fun extractPrincipalEmail(call: ApplicationCall): String? =
         ?.payload
         ?.getClaim("email")
         ?.asString()
-
-
-fun Application.connectToPostgres(embedded: Boolean): Connection {
-    Class.forName("org.postgresql.Driver")
-
-    val dotenv = dotenv()
-
-    if (embedded) {
-        // DriverManager.getConnection("jdbc:<host>:<port>/<baza_danych>", "nazwa użytkownika", "hasło")
-        return DriverManager.getConnection(dotenv["DATABASE_URL"], dotenv["DATABASE_USERNAME"], dotenv["DATABASE_PASSWORD"])
-    } else {
-        val url = environment.config.property("postgres.url").getString()
-        val user = environment.config.property("postgres.user").getString()
-        val password = environment.config.property("postgres.password").getString()
-
-        return DriverManager.getConnection(url, user, password)
-    }
-}

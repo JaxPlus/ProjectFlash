@@ -3,107 +3,104 @@ package com.adam_and_jan.repository
 import com.adam_and_jan.dto.GameDto
 import com.adam_and_jan.mappers.GameMapper
 import com.adam_and_jan.models.Game
+import com.adam_and_jan.models.GameTag
 import com.adam_and_jan.models.Tag
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.sql.Connection
-import java.sql.ResultSet
+import io.github.jan.supabase.SupabaseClient
+import io.github.jan.supabase.postgrest.postgrest
+import io.github.jan.supabase.storage.storage
 
 class GameRepository(
-    private val connection: Connection
+    private val client: SupabaseClient
 ) {
-    companion object {
-        private const val CREATE_GAME = """INSERT INTO games (title, description, rating, gamePath, owner_fk) VALUES (?, ?, ?, ?, ?)"""
-        private const val SELECT_GAME_BY_ID = """SELECT * FROM games WHERE id = ?"""
-        private const val SELECT_ALL_GAMES = """SELECT * FROM games"""
-
-        private const val SELECT_ALL_TAGS = """SELECT * FROM tags"""
-        private const val SELECT_GAMES_BY_TAG = """SELECT * FROM games where id IN(SELECT game_id FROM games_tags WHERE tag_id = ?)"""
-    }
 
     suspend fun create(game: Game): Boolean = withContext(Dispatchers.IO) {
-
-        val statement = connection.prepareStatement(CREATE_GAME)
-        statement.setString(1, game.title)
-        statement.setString(2, game.description)
-        statement.setDouble(3, game.rating)
-        statement.setString(4, game.gamePath)
-        statement.setInt(5, game.ownerFk)
+        client.postgrest["games"]
+            .insert(game)
 
         return@withContext true
     }
 
+    suspend fun getAllGames(): List<Game> = withContext(Dispatchers.IO)  {
+        val query = client.postgrest["games"]
+            .select()
 
-    suspend fun getAllGames(): List<Game> = withContext(Dispatchers.IO) {
-        val statement = connection.prepareStatement(SELECT_ALL_GAMES)
-        val resultSet = statement.executeQuery()
-        val games = mutableListOf<Game>()
+        return@withContext query.decodeList<Game>()
+    }
 
-        while (resultSet.next()) {
-            val game = getGame(resultSet)
-            games.add(game)
+    suspend fun getGame(id: Int): GameDto = withContext(Dispatchers.IO)  {
+        val query = client.postgrest["games"]
+            .select() {
+                filter {
+                    eq("id", id)
+                }
+            }
+
+        val game = query.decodeSingle<Game>()
+        return@withContext GameMapper.toDto(game)
+    }
+
+    suspend fun getGameFile(id: Int): String = withContext(Dispatchers.IO) {
+        val query = client.postgrest["games"]
+            .select() {
+                filter {
+                    eq("id", id)
+                }
+            }
+
+        val game = query.decodeSingle<Game>()
+
+        val gameFile = client.storage.from("game_files").publicUrl(game.game_path)
+
+        return@withContext if (!gameFile.isEmpty()) {
+            gameFile
         }
-
-        return@withContext games
-    }
-
-
-    suspend fun getGame(id: Int): GameDto = withContext(Dispatchers.IO) {
-        val statement = connection.prepareStatement(SELECT_GAME_BY_ID)
-        statement.setInt(1, id)
-        val resultSet = statement.executeQuery()
-
-        if(resultSet.next()) {
-            val game = getGame(resultSet)
-
-            return@withContext GameMapper.toDto(game)
+        else {
+            throw Exception("No game found. ")
         }
-
-        throw Exception("Game not found")
     }
 
-    suspend fun getAllTags(): List<Tag> = withContext(Dispatchers.IO) {
-        val statement = connection.prepareStatement(SELECT_ALL_TAGS)
-        val resultSet = statement.executeQuery()
-        val tags = mutableListOf<Tag>()
+    suspend fun getAllTags(): List<Tag> = withContext(Dispatchers.IO)  {
+        val query = client.postgrest
+            .from("tags")
+            .select()
+        return@withContext query.decodeList<Tag>()
+    }
 
-        while (resultSet.next()) {
-            val tag = getTag(resultSet)
-            tags.add(tag)
+    suspend fun getAllGamesByTag(id: Int): List<Game> = withContext(Dispatchers.IO)  {
+
+        val subquery = client.postgrest["games_tags"]
+            .select() {
+                filter {
+                    eq("tag_id", id)
+                }
+            }
+
+        val gameTag = subquery.decodeSingle<GameTag>()
+
+        val query = client.postgrest["games"]
+            .select() {
+                filter {
+                    eq("id", gameTag.game_id)
+                }
+            }
+
+        return@withContext query.decodeList<Game>()
+    }
+
+    suspend fun getGameThumbnail(gameTitle: String): String = withContext(Dispatchers.IO) {
+        return@withContext if (checkIfFileExists("game_images", "${gameTitle}.png")) {
+            client.storage.from("game_images").publicUrl("${gameTitle}.png")
         }
-
-        return@withContext tags
-    }
-
-    suspend fun getAllGamesByTag(id: Int): List<Game> = withContext(Dispatchers.IO) {
-        val statement = connection.prepareStatement(SELECT_GAMES_BY_TAG)
-        statement.setInt(1, id)
-        val resultSet = statement.executeQuery()
-        val games = mutableListOf<Game>()
-
-        while (resultSet.next()) {
-            val game = getGame(resultSet)
-            games.add(game)
+        else {
+            throw Exception("No thumbnail for game ${gameTitle}.")
         }
-
-        return@withContext games
     }
 
-    private fun getGame(resultSet: ResultSet): Game {
-        val id = resultSet.getInt("id")
-        val title = resultSet.getString("title")
-        val description = resultSet.getString("description")
-        val rating = resultSet.getDouble("rating")
-        val gamePath = resultSet.getString("gamePath")
-        val ownerFk = resultSet.getInt("owner_fk")
+    private suspend fun checkIfFileExists(bucket: String, fileName: String): Boolean = withContext(Dispatchers.IO) {
+        val files = client.storage.from(bucket).list()
 
-        return Game(id, title, description, rating, gamePath, ownerFk)
-    }
-
-    private fun getTag(resultSet: ResultSet): Tag {
-        val id = resultSet.getInt("id")
-        val tagName = resultSet.getString("tag_name")
-
-        return Tag(id, tagName)
+        return@withContext files.any { it.name == fileName }
     }
 }

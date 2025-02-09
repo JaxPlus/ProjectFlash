@@ -5,33 +5,18 @@ import Item from "@/models/Item.ts";
 import InventoryItem from "@/components/InventoryItem.vue";
 import {Skeleton} from "@/components/ui/skeleton";
 import {Button} from "@/components/ui/button";
+import axios from "axios";
 
 const userStore = useUserStore()
 
 const items = ref<Item[]>([]);
 const isLoading = ref(false);
-const avatarImgPath = ref("");
 
 onMounted(async () => {
     isLoading.value = true;
-    avatarImgPath.value = "";
     await userStore.getUser();
     items.value = await userStore.getInventoryItems();
-
-    await import(`../../../files/users/${userStore.user?.username}/avatar.png`).then(value => {
-        console.log(value);
-        avatarImgPath.value = value.default;
-    }).catch(error => {
-        console.log(`PROFILE ERROR: ${error}`);
-        if (userStore.userProfile === "") {
-            avatarImgPath.value = "default";
-        }
-    });
-
-    if (userStore.userProfile === "changed") {
-        avatarImgPath.value = "";
-        userStore.userProfile = "notChanged";
-    }
+    await userStore.getUserProfile();
 
     isLoading.value = false;
 })
@@ -50,11 +35,10 @@ onMounted(async () => {
                     </div>
                 </div>
                 <div class="flex" v-else>
-                    <img v-if="userStore.userProfile === '' && avatarImgPath !== 'default'"
-                         :src="avatarImgPath"
-                         class="rounded-full outline-offset-4 outline outline-2 outline-primary h-[8rem] w-[8rem] m-7"/>
-                    <img v-else-if="avatarImgPath !== 'default' && userStore.userProfile !== ''" :src="userStore.userProfile"
-                         class="rounded-full outline-offset-4 outline outline-2 outline-primary h-[8rem] w-[8rem] m-7"/>
+                    <img
+                        v-if="userStore.userProfile != ''"
+                        :src="userStore.userProfile"
+                        class="rounded-full outline-offset-4 outline outline-2 outline-primary h-[8rem] w-[8rem] m-7"/>
                     <svg v-else class="rounded-full outline-offset-4 outline outline-2 outline-primary fill-primary stroke-secondary/50 h-[8rem] w-[8rem] p-2 m-7" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22">
                         <path
                             d="M9 3h4v1h1v1h1v4h-1v1h-1v1H9v-1H8V9H7V5h1V4h1zm1 5v1h2V8h1V6h-1V5h-2v1H9v2zm-3 4h8v1h2v1h1v1h1v4H3v-4h1v-1h1v-1h2zm-1 4H5v1h12v-1h-1v-1h-2v-1H8v1H6z"/>

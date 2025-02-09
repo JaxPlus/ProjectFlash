@@ -2,7 +2,6 @@ package com.adam_and_jan
 
 import com.adam_and_jan.routing.configureDatabases
 import com.adam_and_jan.routing.configureRouting
-import com.adam_and_jan.routing.connectToPostgres
 import com.adam_and_jan.plugins.*
 import com.adam_and_jan.plugins.services.JwtService
 import com.adam_and_jan.plugins.services.ShopService
@@ -10,20 +9,26 @@ import com.adam_and_jan.plugins.services.UserService
 import com.adam_and_jan.repository.RefreshTokenRepository
 import com.adam_and_jan.repository.ShopRepository
 import com.adam_and_jan.repository.UserRepository
+import com.typesafe.config.ConfigFactory
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMethod
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import io.ktor.server.plugins.cors.routing.CORS
-import java.sql.Connection
+import io.github.jan.supabase.createSupabaseClient
+import io.github.jan.supabase.postgrest.Postgrest
+import io.github.jan.supabase.storage.Storage
+
 
 fun main(args: Array<String>) {
-    embeddedServer(Netty, commandLineEnvironment(args))
+    embeddedServer(Netty, port = 8080, host = "0.0.0.0", module = Application::module)
         .start(wait = true)
 }
 
 fun Application.module() {
+    val config = ConfigFactory.parseResources("application.conf").resolve()
+
     install(CORS) {
         allowHost("localhost:5173")
         allowHeader(HttpHeaders.ContentType)
@@ -35,10 +40,19 @@ fun Application.module() {
         allowMethod(HttpMethod.Delete)
     }
 
-    val dbconnection: Connection = connectToPostgres(embedded = true)
-    val userRepository = UserRepository(dbconnection)
+    val client = createSupabaseClient(
+//        supabaseUrl = applicationEnvironment().config.property("ktor.supabase.url").getString(),
+//        supabaseKey = applicationEnvironment().config.property("ktor.supabase.key").getString(),
+        supabaseUrl = config.getString("ktor.supabase.url"),
+        supabaseKey = config.getString("ktor.supabase.key"),
+    ) {
+        install(Postgrest)
+        install(Storage)
+    }
+
+    val userRepository = UserRepository(client)
     val refreshTokenRepository = RefreshTokenRepository()
-    val shopRepository = ShopRepository(dbconnection)
+    val shopRepository = ShopRepository(client)
 
     val jwtService = JwtService(this)
     val userService = UserService(userRepository, jwtService, refreshTokenRepository)
@@ -47,6 +61,6 @@ fun Application.module() {
 
     configureSecurity(jwtService)
     configureRouting(userService)
-    configureDatabases(shopService)
+    configureDatabases(shopService, client)
     configureSerialization()
 }

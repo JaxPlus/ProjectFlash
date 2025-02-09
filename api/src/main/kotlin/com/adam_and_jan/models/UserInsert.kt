@@ -3,8 +3,7 @@ package com.adam_and_jan.models
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class User (
-    val id: Int,
+data class UserInsert (
     val username: String,
     val email: String,
     val password: String,

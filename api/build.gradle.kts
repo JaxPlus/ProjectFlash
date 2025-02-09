@@ -6,9 +6,9 @@ val dotenv_version: String by project
 val ktor_version: String by project
 
 plugins {
-    kotlin("jvm") version "2.0.20"
-    id("io.ktor.plugin") version "2.3.12"
-    id("org.jetbrains.kotlin.plugin.serialization") version "2.0.20"
+    kotlin("jvm") version "2.1.10"
+    id("io.ktor.plugin") version "3.0.3"
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.1.10"
 }
 
 group = "com.adam_and_jan"
@@ -26,8 +26,8 @@ repositories {
 }
 
 dependencies {
-    implementation("io.ktor:ktor-server-core-jvm")
-    implementation("io.ktor:ktor-server-netty-jvm")
+    implementation("io.ktor:ktor-server-core-jvm:$ktor_version")
+    implementation("io.ktor:ktor-server-netty-jvm:$ktor_version")
     implementation("io.ktor:ktor-serialization-kotlinx-json-jvm")
     implementation("io.ktor:ktor-server-content-negotiation-jvm")
     implementation("io.github.cdimascio:dotenv-kotlin:$dotenv_version")
@@ -42,6 +42,11 @@ dependencies {
     implementation("org.mindrot:jbcrypt:0.4")
 
     //JWT
-    implementation("io.ktor:ktor-server-auth:2.3.12")
-    implementation("io.ktor:ktor-server-auth-jwt:2.3.12")
+    implementation("io.ktor:ktor-server-auth:$ktor_version")
+    implementation("io.ktor:ktor-server-auth-jwt:$ktor_version")
+
+    //Supabase
+    implementation("io.github.jan-tennert.supabase:postgrest-kt:$ktor_version")
+    implementation("io.github.jan-tennert.supabase:storage-kt:$ktor_version")
+    implementation("io.ktor:ktor-client-cio:$ktor_version")
 }

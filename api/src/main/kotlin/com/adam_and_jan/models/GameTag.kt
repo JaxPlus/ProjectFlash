@@ -3,7 +3,8 @@ package com.adam_and_jan.models
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Tag (
+data class GameTag (
     val id: Int,
-    val tag_name: String
+    val game_id: Int,
+    val tag_id: Int
 )
