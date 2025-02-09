@@ -36,7 +36,5 @@ onMounted(async () => {
         </p>
     </div>
     <GameCardGroup v-for="tag in tagsGames" v-if="!isLoading" :group-title="tag.tagName" :game-cards="tag.games" />
+    <GameCardGroup v-for="_ in 2" v-else group-title="Recommended" :game-cards="[]" :is-loading="isLoading" />
 </template>
-
-<style scoped>
-</style>

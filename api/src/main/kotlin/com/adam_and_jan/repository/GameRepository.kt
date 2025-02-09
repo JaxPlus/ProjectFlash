@@ -9,6 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.postgrest.postgrest
+import io.github.jan.supabase.storage.storage
 
 class GameRepository(
     private val client: SupabaseClient
@@ -66,5 +67,31 @@ class GameRepository(
             }
 
         return@withContext query.decodeList<Game>()
+    }
+
+    suspend fun getGameThumbnail(gameTitle: String): String = withContext(Dispatchers.IO) {
+        return@withContext if (checkIfFileExists("game_images", "${gameTitle}.png")) {
+            client.storage.from("game_images").publicUrl("${gameTitle}.png")
+        }
+        else {
+            throw Exception("No thumbnail for game ${gameTitle}.")
+        }
+    }
+
+//    suspend fun getGamesThumbnails(): List<String> = withContext(Dispatchers.IO) {
+//        val files = client.storage.from("game_images").list()
+//        val result: List<String> = mutableListOf()
+//
+//        try {
+//            files.forEach { file ->
+//                result.
+//            }
+//        }
+//    }
+
+    private suspend fun checkIfFileExists(bucket: String, fileName: String): Boolean = withContext(Dispatchers.IO) {
+        val files = client.storage.from(bucket).list()
+
+        return@withContext files.any { it.name == fileName }
     }
 }

@@ -50,6 +50,18 @@ fun Application.configureDatabases(
             }
         }
 
+        get("/game/thumbnail/{title}") {
+            val title = call.parameters["title"] ?: throw IllegalArgumentException("Invalid Title")
+
+            try {
+                val gameImgUrl = gameRepository.getGameThumbnail(title)
+                call.respond(HttpStatusCode.OK, gameImgUrl)
+            }
+            catch (e: Exception) {
+                call.respond(HttpStatusCode.NotFound, e.message ?: "")
+            }
+        }
+
         get("/tags") {
             try {
                 val tags = gameRepository.getAllTags()

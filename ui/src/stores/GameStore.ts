@@ -5,7 +5,6 @@ import Game from "@/models/Game.ts";
 import Tag from "@/models/Tag.ts";
 
 export const useGameStore = defineStore('gameStore', () => {
-
     const game = ref<Game>();
 
     async function getAllGames(): Promise<Game[]>
@@ -34,7 +33,6 @@ export const useGameStore = defineStore('gameStore', () => {
 
         return temp.data
     }
-
     return {
         game,
         getAllGames,
