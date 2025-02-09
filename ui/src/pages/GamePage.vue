@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {useRuffleStore} from "@/stores/RuffleStore.ts";
 import {useGameStore} from "@/stores/GameStore.ts";
-import {ref, watch} from "vue";
+import {onMounted, ref, watch} from "vue";
 import {Skeleton} from "@/components/ui/skeleton";
 import GameCard from "@/components/GameCard.vue";
 import { useRoute } from 'vue-router'
@@ -17,13 +17,18 @@ const id = route.params.gameId;
 
 gameStore.getGameById(id.toString());
 
+onMounted(async () => {
+    await gameStore.getGameFile(id.toString());
+})
+
 watch(
     () => route.params.gameId,
     (newId) => {
         gameStore.getGameById(newId.toString());
+        gameStore.getGameFile(newId.toString());
 
         setTimeout(() => {
-          player.load("../src/assets/games/" + gameStore?.game?.game_path);
+          player.load(gameStore.gameFile);
         }, 1000)
 
         window.scrollTo(0,0);
@@ -35,7 +40,7 @@ setTimeout(() => {
     player.style.width = "100%";
     document.getElementById("container")?.appendChild(player)
     
-    player.load("../src/assets/games/" + gameStore?.game?.game_path);
+    player.load(gameStore.gameFile);
     isLoading.value = false;
 }, 1000)
 

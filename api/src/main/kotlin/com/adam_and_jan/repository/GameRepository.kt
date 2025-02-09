@@ -41,6 +41,26 @@ class GameRepository(
         return@withContext GameMapper.toDto(game)
     }
 
+    suspend fun getGameFile(id: Int): String = withContext(Dispatchers.IO) {
+        val query = client.postgrest["games"]
+            .select() {
+                filter {
+                    eq("id", id)
+                }
+            }
+
+        val game = query.decodeSingle<Game>()
+
+        val gameFile = client.storage.from("game_files").publicUrl(game.game_path)
+
+        return@withContext if (!gameFile.isEmpty()) {
+            gameFile
+        }
+        else {
+            throw Exception("No game found. ")
+        }
+    }
+
     suspend fun getAllTags(): List<Tag> = withContext(Dispatchers.IO)  {
         val query = client.postgrest
             .from("tags")

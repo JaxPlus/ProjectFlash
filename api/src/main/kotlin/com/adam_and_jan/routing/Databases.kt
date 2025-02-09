@@ -50,6 +50,17 @@ fun Application.configureDatabases(
             }
         }
 
+        get("/games/files/{id}") {
+            val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
+            try {
+                val gameFile = gameRepository.getGameFile(id)
+
+                call.respond(HttpStatusCode.OK, gameFile)
+            } catch (e: Exception) {
+                call.respond(HttpStatusCode.NotFound, e.message ?: "")
+            }
+        }
+
         get("/game/thumbnail/{title}") {
             val title = call.parameters["title"] ?: throw IllegalArgumentException("Invalid Title")
 
